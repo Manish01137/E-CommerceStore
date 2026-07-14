@@ -1,362 +1,45 @@
 // Seeds the database with the Ethereal Artisan catalogue and an admin user.
+// The catalogue itself lives in src/data/catalogue.json, which is also what the
+// storefront serves in demo mode (no database) — one source of truth.
 // Run: npm run seed
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import { readFileSync } from "node:fs";
 import { config } from "dotenv";
 
 config({ path: ".env.local" });
 config({ path: ".env" });
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/terra-botanica";
+const MONGODB_URI = process.env.MONGODB_URI;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@etherealartisan.in";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
+
+if (!MONGODB_URI) {
+  console.error(
+    "MONGODB_URI is not set. Add it to .env.local (the app runs in demo mode without it)."
+  );
+  process.exit(1);
+}
 
 const productSchema = new mongoose.Schema({}, { strict: false, timestamps: true });
 const userSchema = new mongoose.Schema({}, { strict: false, timestamps: true });
 const Product = mongoose.model("Product", productSchema);
 const User = mongoose.model("User", userSchema);
 
-const img = (...names) => names.map((n) => `/products/${n}`);
-
-const products = [
-  // ── Artisan soaps ────────────────────────────────────────────
-  {
-    name: "Rose & Pearl Artisan Soap",
-    slug: "rose-pearl-artisan-soap",
-    category: "Soap",
-    scents: ["Rose"],
-    price: 249,
-    compareAtPrice: 299,
-    stock: 64,
-    featured: true,
-    sold: 284,
-    images: img("rose-pearl-soap.jpg", "rose-pearl-soap-2.jpg"),
-    description:
-      "A blush-pink glycerin bar poured in small batches, layered with damask rose extract and finished with a pearly shimmer. It lathers into a soft, powdery rose that lingers on the skin long after the bath.",
-    ingredients:
-      "Saponified coconut & castor oils, glycerin, rose absolute, rose water, pearl powder, vitamin E.",
-  },
-  {
-    name: "Cherry Blossom & Rose Soap",
-    slug: "cherry-blossom-rose-soap",
-    category: "Soap",
-    scents: ["Cherry Blossom", "Rose"],
-    price: 259,
-    stock: 48,
-    featured: true,
-    sold: 226,
-    images: img("cherry-blossom-rose-soap.jpg", "cherry-blossom-soap.jpg"),
-    description:
-      "Sakura and rose in a two-tone gradient bar — bright and floral at the top note, creamy and grounding underneath. Our most-gifted soap, and the one customers say smells like spring.",
-    ingredients:
-      "Glycerin soap base, cherry blossom extract, rose absolute, sweet almond oil, dried rose petals.",
-  },
-  {
-    name: "Goat Milk & Cherry Blossom Soap",
-    slug: "goat-milk-cherry-blossom-soap",
-    category: "Soap",
-    scents: ["Cherry Blossom"],
-    price: 279,
-    stock: 40,
-    featured: false,
-    sold: 158,
-    images: img("cherry-blossom-soap.jpg"),
-    description:
-      "Fresh goat milk makes this bar unusually creamy — it conditions rather than strips, which is why we recommend it for dry and sensitive skin. Scented lightly with cherry blossom.",
-    ingredients:
-      "Goat milk, saponified coconut & olive oils, glycerin, cherry blossom fragrance, shea butter.",
-  },
-  {
-    name: "Goat Milk & Honey Soap",
-    slug: "goat-milk-honey-soap",
-    category: "Soap",
-    scents: ["Honey"],
-    price: 279,
-    compareAtPrice: 329,
-    stock: 52,
-    featured: true,
-    sold: 312,
-    images: img("goat-milk-honey-soap.jpg", "honey-oatmeal-soap.jpg"),
-    description:
-      "Raw forest honey and goat milk in a deep amber bar. Honey is a natural humectant — it draws moisture into the skin — so this one leaves even winter skin feeling fed rather than tight.",
-    ingredients:
-      "Raw honey, goat milk, saponified coconut & olive oils, glycerin, beeswax, vitamin E.",
-  },
-  {
-    name: "Honey Oatmeal Soap",
-    slug: "honey-oatmeal-soap",
-    category: "Soap",
-    scents: ["Honey"],
-    price: 249,
-    stock: 58,
-    featured: false,
-    sold: 197,
-    images: img("honey-oatmeal-soap.jpg"),
-    description:
-      "Colloidal oats suspended in a honey base — a gentle, faintly exfoliating bar that calms itchy and irritated skin. Layered in soft browns, unfussy and quietly effective.",
-    ingredients:
-      "Colloidal oatmeal, raw honey, saponified coconut & olive oils, glycerin, oat milk.",
-  },
-  {
-    name: "Shea Butter & Charcoal Soap",
-    slug: "shea-butter-charcoal-soap",
-    category: "Soap",
-    scents: ["Charcoal"],
-    price: 269,
-    stock: 46,
-    featured: true,
-    sold: 241,
-    images: img("shea-butter-charcoal-soap.jpg"),
-    description:
-      "Activated bamboo charcoal draws out oil and city grime; raw shea butter puts the softness back. The striking black-and-white layers are poured by hand, so no two bars are identical.",
-    ingredients:
-      "Activated bamboo charcoal, raw shea butter, saponified coconut & castor oils, glycerin, tea tree oil.",
-  },
-  {
-    name: "Goat Milk & Orange Butter Soap",
-    slug: "goat-milk-orange-butter-soap",
-    category: "Soap",
-    scents: ["Citrus"],
-    price: 259,
-    stock: 55,
-    featured: false,
-    sold: 174,
-    images: img("goat-milk-orange-soap.jpg", "goat-milk-orange-soap-2.jpg"),
-    description:
-      "Cold-pressed sweet orange oil and sun-dried orange peel flecked through a creamy goat milk base. A bright, waking-up bar — we make it for mornings.",
-    ingredients:
-      "Goat milk, sweet orange essential oil, dried orange peel, turmeric, saponified coconut oil, glycerin.",
-  },
-  {
-    name: "Lemon & Basil Artisan Soap",
-    slug: "lemon-basil-artisan-soap",
-    category: "Soap",
-    scents: ["Citrus"],
-    price: 249,
-    stock: 61,
-    featured: false,
-    sold: 189,
-    images: img("lemon-basil-soap.jpg", "lemon-basil-soap-2.jpg"),
-    description:
-      "Cold-pressed lemon with a green thread of holy basil running through it. Clarifying without being harsh — a favourite through humid Indian summers.",
-    ingredients:
-      "Lemon essential oil, basil extract, saponified coconut & olive oils, glycerin, aloe vera.",
-  },
-  {
-    name: "Green French Clay Soap",
-    slug: "green-french-clay-soap",
-    category: "Soap",
-    scents: ["Green Clay"],
-    price: 289,
-    stock: 34,
-    featured: false,
-    sold: 143,
-    images: img("green-french-clay-soap.jpg"),
-    description:
-      "French green clay and lemongrass in a soft mineral-blue bar. The clay pulls impurities from congested skin, which makes this our most-recommended soap for oily and acne-prone skin.",
-    ingredients:
-      "French green clay, lemongrass essential oil, saponified coconut oil, glycerin, kaolin.",
-  },
-
-  // ── Face washes ──────────────────────────────────────────────
-  {
-    name: "Rose Clay Face Wash",
-    slug: "rose-clay-face-wash",
-    category: "Face Wash",
-    scents: ["Rose"],
-    price: 449,
-    compareAtPrice: 499,
-    stock: 38,
-    featured: true,
-    sold: 268,
-    images: img("face-wash-rose-clay.jpg"),
-    description:
-      "An amino-acid cleanser with pink kaolin clay suspended in it — it lifts oil without that squeaky, stripped feeling. SLS-free, SLES-free, paraben-free and silicone-free, as everything here is.",
-    ingredients:
-      "Amino acid surfactants, pink kaolin clay, rose water, glycerin, aloe vera, vitamin E. 100 ml.",
-  },
-  {
-    name: "Rose Face Wash",
-    slug: "rose-face-wash",
-    category: "Face Wash",
-    scents: ["Rose"],
-    price: 429,
-    stock: 44,
-    featured: false,
-    sold: 201,
-    images: img("face-wash-rose.jpg"),
-    description:
-      "Damask rose hydrosol in a gentle amino-acid base. A soft, everyday cleanse for normal-to-dry skin that leaves the face calm and faintly rose-scented.",
-    ingredients:
-      "Amino acid surfactants, damask rose hydrosol, glycerin, panthenol, rose absolute. 150 ml.",
-  },
-  {
-    name: "Coffee Face Wash",
-    slug: "coffee-face-wash",
-    category: "Face Wash",
-    scents: ["Coffee"],
-    price: 449,
-    stock: 41,
-    featured: true,
-    sold: 233,
-    images: img("face-wash-coffee.jpg"),
-    description:
-      "Finely milled coffee grounds in an amber gel that wakes the skin up — mildly exfoliating, brightening, and honestly, the smell alone is worth it.",
-    ingredients:
-      "Amino acid surfactants, coffee grounds, caffeine, glycerin, vitamin E, arabica oil. 150 ml.",
-  },
-  {
-    name: "Neem & Tulsi Face Wash",
-    slug: "neem-tulsi-face-wash",
-    category: "Face Wash",
-    scents: ["Neem & Tulsi"],
-    price: 429,
-    stock: 47,
-    featured: false,
-    sold: 219,
-    images: img("face-wash-neem-tulsi.jpg"),
-    description:
-      "The two most-trusted plants in the Indian medicine cabinet, in a cleanser. Neem is antibacterial, tulsi is calming — together they keep breakouts in check without over-drying.",
-    ingredients:
-      "Amino acid surfactants, neem extract, tulsi (holy basil) extract, aloe vera, glycerin. 150 ml.",
-  },
-  {
-    name: "Ubtan Face Wash",
-    slug: "ubtan-face-wash",
-    category: "Face Wash",
-    scents: ["Ubtan"],
-    price: 449,
-    stock: 36,
-    featured: false,
-    sold: 186,
-    images: img("face-wash-ubtan.jpg"),
-    description:
-      "Our grandmother's ubtan — turmeric, gram flour, sandalwood — reformulated into a modern amino-acid cleanser. Brightening, gently exfoliating, and completely at home on Indian skin.",
-    ingredients:
-      "Amino acid surfactants, wild turmeric, gram flour, sandalwood powder, saffron, glycerin. 150 ml.",
-  },
-  {
-    name: "Orange Face Wash",
-    slug: "orange-face-wash",
-    category: "Face Wash",
-    scents: ["Citrus"],
-    price: 429,
-    stock: 43,
-    featured: false,
-    sold: 164,
-    images: img("face-wash-orange.jpg"),
-    description:
-      "Cold-pressed sweet orange and vitamin C in a bright, gel cleanser. For dull, tired skin that needs waking rather than scrubbing.",
-    ingredients:
-      "Amino acid surfactants, sweet orange essential oil, vitamin C, glycerin, aloe vera. 150 ml.",
-  },
-  {
-    name: "Strawberry Face Wash",
-    slug: "strawberry-face-wash",
-    category: "Face Wash",
-    scents: ["Strawberry"],
-    price: 429,
-    stock: 39,
-    featured: false,
-    sold: 152,
-    images: img("face-wash-strawberry.jpg"),
-    description:
-      "Strawberry seed extract with natural fruit acids — a gentle, sweet-smelling cleanser that tackles blackheads and uneven texture over time, not overnight.",
-    ingredients:
-      "Amino acid surfactants, strawberry seed extract, fruit AHAs, glycerin, panthenol. 150 ml.",
-  },
-
-  // ── Bath salts ───────────────────────────────────────────────
-  {
-    name: "Lavender Bath Salt",
-    slug: "lavender-bath-salt",
-    category: "Bath Salt",
-    scents: ["Lavender"],
-    price: 549,
-    compareAtPrice: 649,
-    stock: 32,
-    featured: true,
-    sold: 297,
-    images: img("bath-salt-lavender.jpg"),
-    description:
-      "Epsom and sea salt steeped with pure lavender oil and dried buds. Twenty minutes in a warm tub and the day genuinely dissolves — the reason this is our best-selling jar. 200g.",
-    ingredients:
-      "Epsom salt, sea salt, lavender essential oil, dried lavender buds, jojoba oil. Net wt. 200g.",
-  },
-  {
-    name: "Himalayan Pink Bath Salt",
-    slug: "himalayan-pink-bath-salt",
-    category: "Bath Salt",
-    scents: ["Mixed"],
-    price: 549,
-    stock: 29,
-    featured: false,
-    sold: 211,
-    images: img("bath-salt-himalayan-pink.jpg"),
-    description:
-      "Mineral-dense pink salt crystals mined from the Himalayan foothills, blended with Epsom for a soak that eases sore muscles. Suitable for both men and women. 200g.",
-    ingredients:
-      "Himalayan pink salt, Epsom salt, sweet almond oil, geranium & vetiver essential oils. Net wt. 200g.",
-  },
-
-  // ── Face pack ────────────────────────────────────────────────
-  {
-    name: "Orange Face Pack",
-    slug: "orange-face-pack",
-    category: "Face Pack",
-    scents: ["Citrus"],
-    price: 499,
-    stock: 42,
-    featured: true,
-    sold: 178,
-    images: img("face-pack-orange.jpg"),
-    description:
-      "Sun-dried orange peel milled with multani mitti and a whisper of turmeric. Mix with rose water for a weekly mask that lifts oil and heat from the skin and leaves it visibly brighter. 50g.",
-    ingredients:
-      "Orange peel powder, multani mitti (fuller's earth), wild turmeric, kaolin clay, rose petal powder. 50g.",
-  },
-
-  // ── Travel kits ──────────────────────────────────────────────
-  {
-    name: "Travel Essentials Kit",
-    slug: "travel-essentials-kit",
-    category: "Travel Kit",
-    scents: ["Mixed"],
-    price: 1299,
-    compareAtPrice: 1599,
-    stock: 24,
-    featured: true,
-    sold: 132,
-    images: img("travel-kit-essentials.jpg", "travel-kit-essentials-2.jpg"),
-    description:
-      "Everything you actually use, in cabin-friendly sizes: body lotion, body wash, face wash, shower gel and a soap bar, tucked into a clear zip pouch. The gift people quietly keep for themselves.",
-    ingredients:
-      "Contains: 50ml body lotion, 50ml body wash, 50ml face wash, 50ml shower gel, 1 artisan soap bar.",
-  },
-  {
-    name: "Travel Ritual Kit — Lavender & Neroli",
-    slug: "travel-ritual-kit-lavender-neroli",
-    category: "Travel Kit",
-    scents: ["Lavender", "Mixed"],
-    price: 1399,
-    stock: 18,
-    featured: false,
-    sold: 96,
-    images: img("travel-kit-essentials-2.jpg", "travel-kit-essentials.jpg"),
-    description:
-      "Our calming edit — lavender body lotion, neroli body wash, saffron face wash, oceanic shower gel and an orange face pack. Packed for long flights and longer weeks.",
-    ingredients:
-      "Contains: 50ml lavender body lotion, 50ml neroli body wash, 50ml saffron face wash, 50ml shower gel, 50g orange face pack.",
-  },
-];
+const catalogue = JSON.parse(
+  readFileSync(new URL("../src/data/catalogue.json", import.meta.url), "utf8")
+);
 
 async function seed() {
   await mongoose.connect(MONGODB_URI);
   console.log(`Connected to ${MONGODB_URI}`);
 
   await Product.deleteMany({});
-  await Product.insertMany(products.map((p) => ({ ...p, active: true })));
-  console.log(`✓ Seeded ${products.length} products`);
+  // Strip the demo-only ids — Mongo assigns its own _id
+  await Product.insertMany(
+    catalogue.map(({ _id, createdAt, ...p }) => ({ ...p, active: true }))
+  );
+  console.log(`✓ Seeded ${catalogue.length} products`);
 
   const existingAdmin = await User.findOne({ email: ADMIN_EMAIL });
   if (!existingAdmin) {

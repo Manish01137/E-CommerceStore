@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { dbConnect } from "@/lib/db";
-import Product from "@/models/Product";
-import { toJSON, type ProductDTO } from "@/lib/types";
+import { getBy } from "@/lib/products";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import Testimonials from "@/components/shop/Testimonials";
@@ -25,13 +23,10 @@ const CATEGORY_TILES = [
 ];
 
 export default async function ShopPage() {
-  await dbConnect();
-  const [bestsellerDocs, newestDocs] = await Promise.all([
-    Product.find({ active: true }).sort({ sold: -1 }).limit(4).lean(),
-    Product.find({ active: true }).sort({ createdAt: -1 }).limit(4).lean(),
+  const [bestsellers, newest] = await Promise.all([
+    getBy("popular", 4),
+    getBy("newest", 4),
   ]);
-  const bestsellers = toJSON<ProductDTO[]>(bestsellerDocs);
-  const newest = toJSON<ProductDTO[]>(newestDocs);
 
   return (
     <div>

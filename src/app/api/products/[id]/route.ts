@@ -4,10 +4,14 @@ import { dbConnect } from "@/lib/db";
 import Product, { CATEGORIES, SCENTS } from "@/models/Product";
 import { getSession } from "@/lib/auth";
 import { z } from "zod";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: Params) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   await dbConnect();
   const { id } = await params;
   if (!mongoose.isValidObjectId(id)) {
@@ -33,6 +37,9 @@ const updateSchema = z.object({
 });
 
 export async function PUT(req: NextRequest, { params }: Params) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -58,6 +65,9 @@ export async function PUT(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

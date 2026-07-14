@@ -5,6 +5,7 @@ import Order from "@/models/Order";
 import { getSession } from "@/lib/auth";
 import { isRazorpayConfigured, verifyPaymentSignature } from "@/lib/razorpay";
 import { fulfilPaidOrder, markPaymentFailed } from "@/lib/fulfil";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const verifySchema = z.object({
   orderId: z.string(),
@@ -14,6 +15,9 @@ const verifySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

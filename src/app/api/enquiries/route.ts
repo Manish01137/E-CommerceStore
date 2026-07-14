@@ -3,6 +3,7 @@ import { z } from "zod";
 import { dbConnect } from "@/lib/db";
 import Enquiry from "@/models/Enquiry";
 import { getSession } from "@/lib/auth";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const enquirySchema = z.object({
   name: z.string().min(2, "Enter your name"),
@@ -19,6 +20,9 @@ const enquirySchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   await dbConnect();
   const body = await req.json().catch(() => null);
   const parsed = enquirySchema.safeParse(body);
@@ -37,6 +41,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

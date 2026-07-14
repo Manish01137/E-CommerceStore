@@ -4,6 +4,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { put } from "@vercel/blob";
 import { getSession } from "@/lib/auth";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const ALLOWED = new Map([
   ["image/jpeg", ".jpg"],
@@ -14,6 +15,9 @@ const ALLOWED = new Map([
 const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -5,6 +5,8 @@ import { CartProvider } from "@/components/cart/CartContext";
 import { ToastProvider } from "@/components/ui/Toast";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import DemoBanner from "@/components/layout/DemoBanner";
+import { IS_DEMO } from "@/lib/demo";
 import CartDrawer from "@/components/cart/CartDrawer";
 import PageTransition from "@/components/layout/PageTransition";
 
@@ -39,6 +41,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ToastProvider>
           <CartProvider>
+            {IS_DEMO && <DemoBanner />}
             <Navbar />
             <CartDrawer />
             <PageTransition>

@@ -5,6 +5,7 @@ import Product from "@/models/Product";
 import Order from "@/models/Order";
 import { getSession } from "@/lib/auth";
 import { isRazorpayConfigured, createRazorpayOrder } from "@/lib/razorpay";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const SHIPPING_FEE = 79;
 const FREE_SHIPPING_ABOVE = 999;
@@ -38,6 +39,9 @@ function generateOrderNumber(): string {
 }
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Please sign in to place an order" }, { status: 401 });
@@ -132,6 +136,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

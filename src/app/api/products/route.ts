@@ -3,40 +3,27 @@ import { dbConnect } from "@/lib/db";
 import Product, { CATEGORIES, SCENTS } from "@/models/Product";
 import { getSession } from "@/lib/auth";
 import { slugify } from "@/lib/format";
+import { listProducts } from "@/lib/products";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 import { z } from "zod";
 
-const SORTS: Record<string, Record<string, 1 | -1>> = {
-  popular: { sold: -1 },
-  newest: { createdAt: -1 },
-  "price-asc": { price: 1 },
-  "price-desc": { price: -1 },
-};
-
 export async function GET(req: NextRequest) {
-  await dbConnect();
   const params = req.nextUrl.searchParams;
 
-  const filter: Record<string, unknown> = { active: true };
-  const category = params.get("category");
-  const scent = params.get("scent");
-  const q = params.get("q")?.trim();
+  const rawCategory = params.get("category");
+  const rawScent = params.get("scent");
 
-  if (category && (CATEGORIES as readonly string[]).includes(category)) {
-    filter.category = category;
-  }
-  if (scent && (SCENTS as readonly string[]).includes(scent)) {
-    filter.scents = scent;
-  }
-  if (q) {
-    filter.$or = [
-      { name: { $regex: q, $options: "i" } },
-      { description: { $regex: q, $options: "i" } },
-      { category: { $regex: q, $options: "i" } },
-    ];
-  }
+  const products = await listProducts({
+    category:
+      rawCategory && (CATEGORIES as readonly string[]).includes(rawCategory)
+        ? rawCategory
+        : null,
+    scent:
+      rawScent && (SCENTS as readonly string[]).includes(rawScent) ? rawScent : null,
+    q: params.get("q")?.trim() || null,
+    sort: params.get("sort"),
+  });
 
-  const sort = SORTS[params.get("sort") ?? "popular"] ?? SORTS.popular;
-  const products = await Product.find(filter).sort(sort).lean();
   return NextResponse.json({ products });
 }
 
@@ -55,6 +42,9 @@ const productSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

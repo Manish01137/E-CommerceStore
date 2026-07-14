@@ -44,6 +44,36 @@ in `.env.local` before seeding for anything non-local).
 
 ## Deploying to Vercel
 
+### Option A — deploy now, no database (preview mode)
+
+The app runs **without any backend at all**. If `MONGODB_URI` is not set, it
+serves the catalogue from `src/data/catalogue.json` and everything that doesn't
+need to persist works:
+
+| Works in preview mode | Disabled (needs a database) |
+| --- | --- |
+| Home, Shop, Business pages | Sign in / register |
+| Full catalogue, search, filters, sort | Checkout & payments |
+| Product detail pages + galleries | Order history / tracking |
+| Cart (drawer, quantities, persistence) | B2B enquiry submissions |
+| | Admin panel |
+
+A slim "Preview mode" banner appears at the top so visitors know why checkout is
+off, and the disabled routes return a clear message instead of an error page.
+
+To deploy this way:
+
+```bash
+git add -A && git commit -m "Ethereal Artisan storefront"
+git push
+```
+
+Import the repo at [vercel.com/new](https://vercel.com/new) and **set no
+environment variables at all**. It builds and ships as-is. Add the database
+later (Option B) and every disabled feature switches on with no code changes.
+
+### Option B — add the full backend
+
 Vercel runs this app serverless, which changes two things: **there is no local
 MongoDB** and **the filesystem is read-only**. Both are handled below.
 

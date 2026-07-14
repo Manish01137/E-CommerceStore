@@ -1,8 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { dbConnect } from "@/lib/db";
-import Product from "@/models/Product";
-import { toJSON, type ProductDTO } from "@/lib/types";
+import { getFeatured } from "@/lib/products";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 
@@ -32,12 +30,7 @@ const VALUES = [
 ];
 
 export default async function HomePage() {
-  await dbConnect();
-  const featuredDocs = await Product.find({ featured: true, active: true })
-    .sort({ sold: -1 })
-    .limit(4)
-    .lean();
-  const featured = toJSON<ProductDTO[]>(featuredDocs);
+  const featured = await getFeatured(4);
 
   return (
     <div>

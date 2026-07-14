@@ -3,6 +3,7 @@ import { z } from "zod";
 import { dbConnect } from "@/lib/db";
 import User from "@/models/User";
 import { getSession } from "@/lib/auth";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const addressSchema = z.object({
   label: z.string().min(1).default("Home"),
@@ -16,6 +17,9 @@ const addressSchema = z.object({
 });
 
 export async function GET() {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await dbConnect();
@@ -24,6 +28,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
@@ -46,6 +53,9 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 

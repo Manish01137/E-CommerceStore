@@ -1,8 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { dbConnect } from "@/lib/db";
-import Product from "@/models/Product";
-import { toJSON, type ProductDTO } from "@/lib/types";
+import { getProductBySlug, getRelated } from "@/lib/products";
 import ProductDetail from "@/components/product/ProductDetail";
 import ProductCard from "@/components/product/ProductCard";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
@@ -13,8 +11,7 @@ type Props = { params: Promise<{ slug: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  await dbConnect();
-  const product = await Product.findOne({ slug, active: true }).lean();
+  const product = await getProductBySlug(slug);
   if (!product) return { title: "Product not found" };
   return {
     title: product.name,
@@ -24,22 +21,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
-  await dbConnect();
 
-  const productDoc = await Product.findOne({ slug, active: true }).lean();
-  if (!productDoc) notFound();
-  const product = toJSON<ProductDTO>(productDoc);
+  const product = await getProductBySlug(slug);
+  if (!product) notFound();
 
-  const relatedFilter: Record<string, unknown> = {
-    active: true,
-    _id: { $ne: productDoc._id },
-    $or: [{ category: product.category }, { scents: { $in: product.scents } }],
-  };
-  const relatedDocs = await Product.find(relatedFilter)
-    .sort({ sold: -1 })
-    .limit(4)
-    .lean();
-  const related = toJSON<ProductDTO[]>(relatedDocs);
+  const related = await getRelated(product, 4);
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-16">

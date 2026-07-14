@@ -4,6 +4,7 @@ import { z } from "zod";
 import { dbConnect } from "@/lib/db";
 import User from "@/models/User";
 import { signSession, setSessionCookie } from "@/lib/auth";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const registerSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -12,6 +13,9 @@ const registerSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   await dbConnect();
   const body = await req.json().catch(() => null);
   const parsed = registerSchema.safeParse(body);

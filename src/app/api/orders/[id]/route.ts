@@ -4,10 +4,14 @@ import { dbConnect } from "@/lib/db";
 import Order from "@/models/Order";
 import { getSession } from "@/lib/auth";
 import { trackShipment } from "@/lib/shiprocket";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function GET(req: NextRequest, { params }: Params) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

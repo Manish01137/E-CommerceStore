@@ -4,12 +4,16 @@ import { z } from "zod";
 import { dbConnect } from "@/lib/db";
 import Enquiry, { ENQUIRY_STATUSES } from "@/models/Enquiry";
 import { getSession } from "@/lib/auth";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 type Params = { params: Promise<{ id: string }> };
 
 const patchSchema = z.object({ status: z.enum(ENQUIRY_STATUSES) });
 
 export async function PATCH(req: NextRequest, { params }: Params) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   const session = await getSession();
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -5,6 +5,7 @@ import Order from "@/models/Order";
 import { getSession } from "@/lib/auth";
 import { isRazorpayConfigured } from "@/lib/razorpay";
 import { fulfilPaidOrder, markPaymentFailed } from "@/lib/fulfil";
+import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const mockSchema = z.object({
   orderId: z.string(),
@@ -16,6 +17,9 @@ const mockSchema = z.object({
  * are configured. Lets the full checkout → fulfilment flow run locally.
  */
 export async function POST(req: NextRequest) {
+  if (!DB_ENABLED) {
+    return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
+  }
   if (isRazorpayConfigured()) {
     return NextResponse.json(
       { error: "Mock payments are disabled when Razorpay is configured" },
