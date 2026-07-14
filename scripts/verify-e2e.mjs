@@ -32,14 +32,14 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 
 // 1. product detail → add to cart → drawer
-await page.goto(`${BASE}/products/botanical-whipped-body-lotion`, { waitUntil: "networkidle" });
-await page.getByRole("radio", { name: "Sandalwood" }).click();
+await page.goto(`${BASE}/products/cherry-blossom-rose-soap`, { waitUntil: "networkidle" });
+await page.getByRole("radio", { name: "Rose" }).click();
 await page.getByRole("button", { name: "Add to Cart" }).click();
 await page.waitForTimeout(600);
 await page.getByRole("button", { name: "View Cart" }).click();
 await page.waitForTimeout(700);
 const drawerText = await page.getByRole("dialog", { name: "Shopping cart" }).textContent();
-console.log("cart drawer has item:", drawerText.includes("Botanical Whipped"), "| scent:", drawerText.includes("Sandalwood"));
+console.log("cart drawer has item:", drawerText.includes("Cherry Blossom"), "| scent:", drawerText.includes("Rose"));
 await page.screenshot({ path: `${OUT}/e2e-drawer.png` });
 
 // 2. proceed to checkout → redirected to login → register a fresh user
@@ -59,7 +59,7 @@ console.log("registered and landed on:", new URL(page.url()).pathname);
 // 3. back to checkout — cart persisted?
 await page.goto(`${BASE}/checkout`, { waitUntil: "networkidle" });
 const summary = await page.textContent("body");
-console.log("checkout shows item:", summary.includes("Botanical Whipped"));
+console.log("checkout shows item:", summary.includes("Cherry Blossom"));
 
 // 4. fill address, submit invalid first (validation), then valid
 await page.getByRole("button", { name: /^Pay/ }).click();

@@ -1,20 +1,26 @@
 import mongoose, { Schema, type InferSchemaType, type Model } from "mongoose";
 
 export const CATEGORIES = [
-  "Body Lotion",
-  "Face Cream",
-  "Bath Salt",
-  "Clay",
-  "Scrub",
   "Soap",
+  "Face Wash",
+  "Bath Salt",
+  "Face Pack",
+  "Travel Kit",
 ] as const;
 
 export const SCENTS = [
-  "Lavender",
-  "Jasmine",
-  "Sandalwood",
   "Rose",
   "Citrus",
+  "Lavender",
+  "Honey",
+  "Coffee",
+  "Charcoal",
+  "Cherry Blossom",
+  "Neem & Tulsi",
+  "Green Clay",
+  "Strawberry",
+  "Ubtan",
+  "Mixed",
 ] as const;
 
 const ProductSchema = new Schema(

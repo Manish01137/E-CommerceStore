@@ -59,7 +59,7 @@ function AdminLoginForm() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-sm rounded-2xl bg-almond-light p-8 shadow-drawer"
       >
-        <p className="font-serif text-2xl">Terra Botanica</p>
+        <p className="font-serif text-2xl">Ethereal Artisan</p>
         <p className="eyebrow mt-1 text-moss-dark">Admin Panel</p>
 
         <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
@@ -73,7 +73,7 @@ function AdminLoginForm() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="field"
-              placeholder="admin@terrabotanica.in"
+              placeholder="admin@etherealartisan.in"
               autoComplete="username"
             />
           </div>

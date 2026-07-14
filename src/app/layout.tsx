@@ -22,11 +22,11 @@ const manrope = Manrope({
 
 export const metadata: Metadata = {
   title: {
-    default: "Terra Botanica — Organic Bath & Body",
-    template: "%s · Terra Botanica",
+    default: "Ethereal Artisan — Organic Bath & Body",
+    template: "%s · Ethereal Artisan",
   },
   description:
-    "Small-batch organic bath & body care — lotions, creams, bath salts, clays, scrubs and soaps crafted from botanicals.",
+    "Small-batch organic bath & body care — hand-poured artisan soaps, amino-acid face washes, bath salts, face packs and travel kits.",
 };
 
 export default function RootLayout({

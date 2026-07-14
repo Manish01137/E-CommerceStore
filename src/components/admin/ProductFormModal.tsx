@@ -6,8 +6,21 @@ import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/Toast";
 import type { ProductDTO } from "@/lib/types";
 
-const CATEGORIES = ["Body Lotion", "Face Cream", "Bath Salt", "Clay", "Scrub", "Soap"];
-const SCENTS = ["Lavender", "Jasmine", "Sandalwood", "Rose", "Citrus"];
+const CATEGORIES = ["Soap", "Face Wash", "Bath Salt", "Face Pack", "Travel Kit"];
+const SCENTS = [
+  "Rose",
+  "Citrus",
+  "Lavender",
+  "Honey",
+  "Coffee",
+  "Charcoal",
+  "Cherry Blossom",
+  "Neem & Tulsi",
+  "Green Clay",
+  "Strawberry",
+  "Ubtan",
+  "Mixed",
+];
 
 interface Props {
   product: ProductDTO | null;

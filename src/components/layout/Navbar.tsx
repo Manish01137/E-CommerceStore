@@ -33,30 +33,47 @@ export default function Navbar() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <header className="sticky top-0 z-50 bg-moss text-almond-light shadow-[0_1px_0_rgba(88,92,66,0.35)]">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
-        <Link href="/" className="group flex items-center gap-2.5" aria-label="Terra Botanica home">
+    <header className="sticky top-0 z-50 border-b border-moss-deep/40 bg-moss/95 text-almond-light shadow-[0_2px_12px_rgba(88,92,66,0.18)] backdrop-blur-md">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 lg:px-8">
+        <Link href="/" className="group flex items-center gap-2.5" aria-label="Ethereal Artisan home">
           <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden
             className="transition-transform duration-300 group-hover:rotate-12">
             <circle cx="15" cy="15" r="14" stroke="currentColor" strokeWidth="1.5" />
             <path d="M15 23 C 15 15 15 12 15 7 M15 12 Q 20 10 22 6 M15 16 Q 10 14 8 10"
               stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
           </svg>
-          <span className="font-serif text-xl tracking-wide">Terra Botanica</span>
+          <span className="font-serif text-xl tracking-wide">Ethereal Artisan</span>
         </Link>
 
-        <ul className="hidden items-center gap-8 md:flex">
-          {LINKS.map((l) => (
-            <li key={l.href}>
-              <Link
-                href={l.href}
-                className="nav-link text-sm font-semibold tracking-wide"
-                aria-current={pathname === l.href ? "page" : undefined}
-              >
-                {l.label}
-              </Link>
-            </li>
-          ))}
+        {/* Connected tab group — one continuous pill, sliding active indicator */}
+        <ul className="hidden items-center rounded-full border border-moss-deep/35 bg-moss-deep/25 p-1 md:flex">
+          {LINKS.map((l) => {
+            const active = pathname === l.href;
+            return (
+              <li key={l.href}>
+                <Link
+                  href={l.href}
+                  aria-current={active ? "page" : undefined}
+                  className="relative block rounded-full px-4 py-1.5 text-sm font-semibold tracking-wide transition-colors duration-200"
+                >
+                  {active && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      className="absolute inset-0 rounded-full bg-almond-light"
+                    />
+                  )}
+                  <span
+                    className={`relative z-10 ${
+                      active ? "text-moss-deep" : "text-almond-light/85 hover:text-almond-light"
+                    }`}
+                  >
+                    {l.label}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="flex items-center gap-3">

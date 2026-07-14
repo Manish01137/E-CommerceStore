@@ -35,7 +35,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         }`}
       >
         <div className="border-b border-almond-light/10 px-6 py-5">
-          <p className="font-serif text-xl">Terra Botanica</p>
+          <p className="font-serif text-xl">Ethereal Artisan</p>
           <p className="eyebrow mt-0.5 text-almond-light/60">Admin Panel</p>
         </div>
         <nav className="flex-1 space-y-1 px-3 py-5">

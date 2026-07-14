@@ -142,7 +142,7 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
         <p className="mt-6 text-center text-sm text-earth">
           {isLogin ? (
             <>
-              New to Terra Botanica?{" "}
+              New to Ethereal Artisan?{" "}
               <Link href="/register" className="font-semibold text-moss-deep underline-offset-2 hover:underline">
                 Create an account
               </Link>

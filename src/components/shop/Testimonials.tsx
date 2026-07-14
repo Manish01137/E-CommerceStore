@@ -5,7 +5,7 @@ const TESTIMONIALS = [
     name: "Priya Nair",
     place: "Kochi",
     quote:
-      "The sandalwood face cream smells like my grandmother's cupboard in the best possible way. My skin has never been calmer.",
+      "The ubtan face wash smells like my grandmother's kitchen in the best possible way. My skin has never been calmer.",
     rating: 5,
     initials: "PN",
     tint: "#c3b5cc",
@@ -14,7 +14,7 @@ const TESTIMONIALS = [
     name: "Arjun Mehta",
     place: "Mumbai",
     quote:
-      "Bought the coffee scrub on a whim. Three months later my whole bathroom shelf is Terra Botanica. Send help (and more soap).",
+      "Bought the charcoal soap on a whim. Three months later my whole bathroom shelf is Ethereal Artisan. Send help (and more soap).",
     rating: 5,
     initials: "AM",
     tint: "#cfae8a",

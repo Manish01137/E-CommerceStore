@@ -5,7 +5,6 @@ import Product from "@/models/Product";
 import { toJSON, type ProductDTO } from "@/lib/types";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
-import HeroBotanical from "@/components/home/HeroBotanical";
 
 export const dynamic = "force-dynamic";
 
@@ -17,7 +16,7 @@ const VALUES = [
   },
   {
     title: "Small Batches",
-    body: "We blend in batches of sixty, never six thousand. Freshness you can smell.",
+    body: "We pour in batches of sixty, never six thousand. Freshness you can smell.",
     icon: "M6 20 L6 10 Q6 7 9 7 L15 7 Q18 7 18 10 L18 20 Z M9 7 L9 4 L15 4 L15 7",
   },
   {
@@ -27,7 +26,7 @@ const VALUES = [
   },
   {
     title: "Honest Labels",
-    body: "If it's in the jar, it's on the label — in words you don't need a chemistry degree for.",
+    body: "SLS-free, paraben-free, silicone-free — and every ingredient printed in plain words.",
     icon: "M5 4 L19 4 L19 20 L5 20 Z M8 9 H16 M8 13 H16 M8 17 H12",
   },
 ];
@@ -42,27 +41,39 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden bg-almond">
-        <HeroBotanical />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 pb-20 pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8 lg:pb-28 lg:pt-24">
-          <div>
+      {/* ── Hero banner ──────────────────────────────────────── */}
+      <section className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/banners/banner-hero.jpg"
+            alt="Hand-cut artisan soaps wrapped in paper, resting beside dried lavender"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-earth-deep/85 via-earth-deep/60 to-earth-deep/25" />
+        </div>
+
+        <div className="mx-auto flex min-h-[34rem] max-w-7xl items-center px-5 py-24 lg:min-h-[42rem] lg:px-8">
+          <div className="max-w-2xl">
             <Reveal>
-              <p className="eyebrow text-moss-dark">Organic Bath &amp; Body · Est. 2019</p>
+              <p className="eyebrow text-sand-light">
+                Organic · Cruelty Free · 100% Natural
+              </p>
             </Reveal>
             <Reveal delay={0.08}>
-              <h1 className="mt-5 text-hero-sm md:text-hero">
+              <h1 className="mt-5 text-hero-sm text-almond-light md:text-hero">
                 The earth already wrote
                 <br />
-                <em className="text-moss-dark">the recipe.</em>
+                <em className="text-sage-light">the recipe.</em>
               </h1>
             </Reveal>
             <Reveal delay={0.16}>
-              <p className="mt-6 max-w-lg text-lg leading-relaxed text-earth">
-                Terra Botanica began in a farmhouse kitchen in Jaipur, where our
-                founder Meera crushed her grandmother&apos;s rose-petal ubtan by
-                hand. Six years on, we still make every jar the slow way —
-                botanicals, cold-pressed oils, and nothing your skin doesn&apos;t need.
+              <p className="mt-6 max-w-lg text-lg leading-relaxed text-almond-light/85">
+                Ethereal Artisan began in a farmhouse kitchen, pouring soap by
+                hand in batches small enough to smell the difference. Cold-pressed
+                oils, real botanicals, and nothing your skin doesn&apos;t need.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
@@ -70,55 +81,27 @@ export default async function HomePage() {
                 <Link href="/products" className="btn btn-primary">
                   Explore the Collection
                 </Link>
-                <Link href="/business" className="btn btn-outline">
+                <Link href="/business" className="btn btn-light">
                   Wholesale Enquiries
                 </Link>
               </div>
             </Reveal>
           </div>
-
-          <Reveal delay={0.2} className="hidden lg:block">
-            <div className="relative mx-auto grid max-w-md grid-cols-2 gap-4">
-              <div className="relative mt-10 aspect-[4/5] overflow-hidden rounded-2xl border border-sand shadow-card">
-                <Image src="/products/lavender-dream-body-lotion.svg" alt="Lavender Dream Body Lotion"
-                  fill className="object-cover" sizes="220px" priority />
-              </div>
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-sand shadow-card">
-                <Image src="/products/jasmine-honey-soap.svg" alt="Jasmine Honey Soap"
-                  fill className="object-cover" sizes="220px" priority />
-              </div>
-              <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-sand shadow-card">
-                <Image src="/products/citrus-grove-bath-salt.svg" alt="Citrus Grove Bath Salt"
-                  fill className="object-cover" sizes="220px" />
-              </div>
-              <div className="relative mt-[-2.5rem] aspect-[4/5] overflow-hidden rounded-2xl border border-sand shadow-card">
-                <Image src="/products/sandalwood-saffron-face-cream.svg" alt="Sandalwood Saffron Face Cream"
-                  fill className="object-cover" sizes="220px" />
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
       {/* ── Philosophy ───────────────────────────────────────── */}
-      <section className="bg-sand/40">
+      <section className="bg-almond">
         <div className="mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
           <Reveal>
-            <div className="relative aspect-[5/4] overflow-hidden rounded-3xl border border-sand bg-almond-light shadow-card">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg viewBox="0 0 400 320" className="h-full w-full" aria-hidden>
-                  <rect width="400" height="320" fill="#f4ede3" />
-                  <circle cx="200" cy="160" r="120" fill="#e3d4c0" />
-                  <circle cx="200" cy="160" r="120" fill="none" stroke="#c7af94" strokeWidth="1.5" />
-                  <path d="M200 250 C 200 200 200 160 200 80 M200 140 Q 245 125 262 82 M200 180 Q 155 165 140 122 M200 110 Q 230 100 240 74"
-                    stroke="#737757" strokeWidth="3" fill="none" strokeLinecap="round" />
-                  <ellipse cx="264" cy="78" rx="9" ry="15" fill="#8c916c" transform="rotate(40 264 78)" />
-                  <ellipse cx="138" cy="118" rx="9" ry="15" fill="#8c916c" transform="rotate(-40 138 118)" />
-                  <ellipse cx="242" cy="70" rx="6" ry="11" fill="#acb087" transform="rotate(30 242 70)" />
-                  <text x="200" y="292" textAnchor="middle" fill="#95714f"
-                    fontFamily="Georgia, serif" fontSize="15" fontStyle="italic">from soil to skin</text>
-                </svg>
-              </div>
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-sand shadow-card">
+              <Image
+                src="/banners/banner-story.jpg"
+                alt="A row of hand-cut soap bars on soft linen"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                className="object-cover"
+              />
             </div>
           </Reveal>
           <div>
@@ -132,15 +115,14 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mt-5 leading-relaxed text-earth">
-                We work directly with fourteen small farms across Rajasthan and
-                Karnataka — lavender from high fields, jasmine picked before
-                sunrise, sandalwood sourced under strict stewardship. Every
-                ingredient is traceable to a person and a place.
+                Goat milk and raw honey. Activated charcoal and French green
+                clay. Rose, cherry blossom, neem, tulsi, coffee — ingredients you
+                could name blindfolded, sourced from growers we know and pay
+                fairly.
               </p>
               <p className="mt-4 leading-relaxed text-earth">
-                No parabens, no sulphates, no synthetic fragrance. Just recipes
-                perfected over generations, made stable and safe by modern
-                small-batch craft.
+                No SLS, no parabens, no silicones, no synthetic fillers. Just
+                recipes perfected slowly, poured by hand, and cured with patience.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
@@ -153,13 +135,13 @@ export default async function HomePage() {
       </section>
 
       {/* ── Values band ──────────────────────────────────────── */}
-      <section className="bg-almond">
+      <section className="bg-sand/40">
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
           <Stagger className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {VALUES.map((v) => (
               <StaggerItem key={v.title}>
                 <div className="flex flex-col items-start gap-3">
-                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sage/40 text-moss-deep">
+                  <span className="flex h-12 w-12 items-center justify-center rounded-full bg-sage/50 text-moss-deep">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
                       <path d={v.icon} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
@@ -170,6 +152,35 @@ export default async function HomePage() {
               </StaggerItem>
             ))}
           </Stagger>
+        </div>
+      </section>
+
+      {/* ── Craft banner (full-bleed) ────────────────────────── */}
+      <section className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/banners/banner-craft.jpg"
+            alt="Soap bars set with dried rose petals, laid out on a workbench"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-earth-deep/75" />
+        </div>
+        <div className="mx-auto max-w-3xl px-5 py-24 text-center lg:py-32">
+          <Reveal>
+            <p className="eyebrow text-sand-light">Poured by Hand</p>
+            <h2 className="mt-4 text-display text-almond-light">
+              Every bar cures for four weeks before it earns a label.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-almond-light/85">
+              It would be quicker to machine-press them. It would also be a
+              different product entirely — and not one we&apos;d put our name on.
+            </p>
+            <Link href="/products?category=Soap" className="btn btn-light mt-8">
+              Shop the Soaps
+            </Link>
+          </Reveal>
         </div>
       </section>
 
@@ -187,47 +198,60 @@ export default async function HomePage() {
             <Reveal delay={0.1}>
               <Link
                 href="/shop"
-                className="group relative flex min-h-72 flex-col justify-end overflow-hidden rounded-3xl bg-almond p-8 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-card-hover lg:p-10"
+                className="group relative flex min-h-80 flex-col justify-end overflow-hidden rounded-3xl p-8 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-card-hover lg:p-10"
               >
-                <svg className="absolute -right-8 -top-8 h-48 w-48 text-sage/50 transition-transform duration-500 group-hover:rotate-12" viewBox="0 0 100 100" fill="currentColor" aria-hidden>
-                  <path d="M50 15 C 60 30 80 35 80 55 A30 30 0 0 1 20 55 C 20 35 40 30 50 15 Z" />
-                </svg>
-                <p className="eyebrow text-moss-dark">For You</p>
-                <h3 className="mt-2 font-serif text-3xl">Shop the Collection</h3>
-                <p className="mt-3 max-w-sm text-earth">
-                  Lotions, creams, salts, clays, scrubs and soaps — delivered to
-                  your door, made the week you order.
-                </p>
-                <span className="mt-6 inline-flex items-center gap-2 font-semibold text-moss-deep">
-                  Start shopping
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden>
-                    <path d="M4 12 H20 M14 6 L20 12 L14 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
+                <Image
+                  src="/banners/banner-shop.jpg"
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-earth-deep/95 via-earth-deep/80 to-earth-deep/35" />
+                <div className="relative">
+                  <p className="eyebrow text-sand-light">For You</p>
+                  <h3 className="mt-2 font-serif text-3xl text-almond-light">Shop the Collection</h3>
+                  <p className="mt-3 max-w-sm text-almond-light/85">
+                    Soaps, face washes, bath salts and travel kits — delivered to
+                    your door, poured the week you order.
+                  </p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-semibold text-almond-light">
+                    Start shopping
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden>
+                      <path d="M4 12 H20 M14 6 L20 12 L14 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
               </Link>
             </Reveal>
 
             <Reveal delay={0.18}>
               <Link
                 href="/business"
-                className="group relative flex min-h-72 flex-col justify-end overflow-hidden rounded-3xl bg-sand p-8 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-card-hover lg:p-10"
+                className="group relative flex min-h-80 flex-col justify-end overflow-hidden rounded-3xl p-8 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 hover:shadow-card-hover lg:p-10"
               >
-                <svg className="absolute -right-6 -top-10 h-52 w-52 text-earth/25 transition-transform duration-500 group-hover:-rotate-6" viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
-                  <rect x="20" y="35" width="60" height="45" rx="4" />
-                  <path d="M35 35 V25 A5 5 0 0 1 40 20 H60 A5 5 0 0 1 65 25 V35" />
-                </svg>
-                <p className="eyebrow text-earth-dark">For Business</p>
-                <h3 className="mt-2 font-serif text-3xl">Wholesale &amp; Bulk</h3>
-                <p className="mt-3 max-w-sm text-earth-deep">
-                  Hotels, boutiques, gifting programmes — private-label and bulk
-                  botanicals, crafted to your brief.
-                </p>
-                <span className="mt-6 inline-flex items-center gap-2 font-semibold text-earth-deep">
-                  Enquire to know more
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden>
-                    <path d="M4 12 H20 M14 6 L20 12 L14 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                </span>
+                <Image
+                  src="/banners/banner-botanicals.jpg"
+                  alt=""
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-earth-deep/95 via-earth-deep/80 to-earth-deep/35" />
+                <div className="relative">
+                  <p className="eyebrow text-sand-light">For Business</p>
+                  <h3 className="mt-2 font-serif text-3xl text-almond-light">Wholesale &amp; Bulk</h3>
+                  <p className="mt-3 max-w-sm text-almond-light/85">
+                    Hotels, boutiques, gifting programmes — private-label and bulk
+                    botanicals, crafted to your brief.
+                  </p>
+                  <span className="mt-6 inline-flex items-center gap-2 font-semibold text-almond-light">
+                    Enquire to know more
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="transition-transform duration-300 group-hover:translate-x-1.5" aria-hidden>
+                      <path d="M4 12 H20 M14 6 L20 12 L14 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </span>
+                </div>
               </Link>
             </Reveal>
           </div>

@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import EnquiryForm from "@/components/business/EnquiryForm";
 
 export const metadata: Metadata = {
   title: "Wholesale & Business",
   description:
-    "Partner with Terra Botanica — bulk and private-label organic bath & body care for hotels, boutiques and gifting.",
+    "Partner with Ethereal Artisan — bulk and private-label organic bath & body care for hotels, boutiques and gifting.",
 };
 
 const CREDENTIALS = [
@@ -30,7 +31,18 @@ export default function BusinessPage() {
   return (
     <div>
       {/* Intro */}
-      <section className="bg-earth text-almond-light">
+      <section className="relative isolate overflow-hidden text-almond-light">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/banners/banner-botanicals.jpg"
+            alt="Dried botanicals arranged on a pale linen surface"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-earth-deep/90 via-earth/75 to-earth/50" />
+        </div>
         <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
           <Reveal className="max-w-2xl">
             <p className="eyebrow text-sand-light">For Business</p>

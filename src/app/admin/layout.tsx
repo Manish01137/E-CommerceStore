@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AdminShell from "@/components/admin/AdminShell";
 
 export const metadata: Metadata = {
-  title: { default: "Admin", template: "%s · Terra Botanica Admin" },
+  title: { default: "Admin", template: "%s · Ethereal Artisan Admin" },
   robots: { index: false, follow: false },
 };
 

@@ -116,7 +116,7 @@ export default function CheckoutClient() {
         key: payment.keyId,
         amount: payment.amount,
         currency: "INR",
-        name: "Terra Botanica",
+        name: "Ethereal Artisan",
         description: "Organic bath & body",
         order_id: payment.razorpayOrderId,
         prefill: { name: address.fullName, email: address.email, contact: address.phone },

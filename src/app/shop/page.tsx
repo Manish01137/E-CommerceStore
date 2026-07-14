@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { dbConnect } from "@/lib/db";
 import Product from "@/models/Product";
 import { toJSON, type ProductDTO } from "@/lib/types";
@@ -12,16 +13,15 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "Shop",
   description:
-    "Shop Terra Botanica's organic bath & body collection — delivered fresh, made in small batches.",
+    "Shop Ethereal Artisan's organic bath & body collection — delivered fresh, made in small batches.",
 };
 
 const CATEGORY_TILES = [
-  { name: "Body Lotion", blurb: "Silken daily hydration" },
-  { name: "Face Cream", blurb: "Botanical skin rituals" },
+  { name: "Soap", blurb: "Hand-poured artisan bars" },
+  { name: "Face Wash", blurb: "Amino-acid cleansers" },
   { name: "Bath Salt", blurb: "Mineral-rich soaks" },
-  { name: "Clay", blurb: "Deep-cleansing masks" },
-  { name: "Scrub", blurb: "Gentle renewal" },
-  { name: "Soap", blurb: "Slow-cured bars" },
+  { name: "Face Pack", blurb: "Clay & botanical masks" },
+  { name: "Travel Kit", blurb: "Rituals, cabin-sized" },
 ];
 
 export default async function ShopPage() {
@@ -35,15 +35,28 @@ export default async function ShopPage() {
 
   return (
     <div>
-      {/* Intro */}
-      <section className="bg-almond">
-        <div className="mx-auto max-w-7xl px-5 pb-14 pt-14 lg:px-8 lg:pt-20">
+      {/* Intro banner */}
+      <section className="relative isolate overflow-hidden">
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/banners/banner-craft.jpg"
+            alt="Hand-poured soap bars set with dried rose petals"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-earth-deep/85 via-earth-deep/55 to-earth-deep/20" />
+        </div>
+        <div className="mx-auto max-w-7xl px-5 py-24 lg:px-8 lg:py-32">
           <Reveal className="max-w-2xl">
-            <p className="eyebrow text-moss-dark">The Storefront</p>
-            <h1 className="mt-4 text-hero-sm md:text-hero">Everyday rituals, delivered.</h1>
-            <p className="mt-5 text-lg text-earth">
-              Every order is blended, poured and packed within the week — so
-              what reaches you is as alive as the garden it came from.
+            <p className="eyebrow text-sand-light">The Storefront</p>
+            <h1 className="mt-4 text-hero-sm text-almond-light md:text-hero">
+              Everyday rituals, delivered.
+            </h1>
+            <p className="mt-5 max-w-lg text-lg text-almond-light/85">
+              Every order is poured, cured and packed by hand — so what reaches
+              you is as alive as the day we made it.
             </p>
           </Reveal>
         </div>
@@ -52,7 +65,7 @@ export default async function ShopPage() {
       {/* Category tiles */}
       <section className="bg-almond pb-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+          <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
             {CATEGORY_TILES.map((c) => (
               <StaggerItem key={c.name}>
                 <Link

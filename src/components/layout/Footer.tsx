@@ -11,7 +11,7 @@ export default function Footer() {
     <footer className="bg-earth text-almond-light">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
-          <p className="font-serif text-2xl">Terra Botanica</p>
+          <p className="font-serif text-2xl">Ethereal Artisan</p>
           <p className="mt-3 max-w-xs text-sm leading-relaxed text-almond-light/80">
             Small-batch bath &amp; body care, crafted from botanicals grown with
             patience and pressed with care.
@@ -39,7 +39,7 @@ export default function Footer() {
         <div>
           <p className="eyebrow mb-4 text-almond-light/70">Get in Touch</p>
           <ul className="space-y-2.5 text-sm text-almond-light/85">
-            <li>hello@terrabotanica.in</li>
+            <li>hello@etherealartisan.in</li>
             <li>+91 98765 43210</li>
             <li>Jaipur, Rajasthan, India</li>
           </ul>
@@ -48,7 +48,7 @@ export default function Footer() {
 
       <div className="border-t border-almond-light/15">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-5 py-5 text-xs text-almond-light/60 sm:flex-row lg:px-8">
-          <p>© {new Date().getFullYear()} Terra Botanica. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Ethereal Artisan. All rights reserved.</p>
           <p>Crafted with botanicals &amp; care.</p>
         </div>
       </div>

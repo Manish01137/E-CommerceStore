@@ -6,8 +6,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { ProductDTO } from "@/lib/types";
 import ProductCard from "./ProductCard";
 
-const CATEGORIES = ["Body Lotion", "Face Cream", "Bath Salt", "Clay", "Scrub", "Soap"];
-const SCENTS = ["Lavender", "Jasmine", "Sandalwood", "Rose", "Citrus"];
+const CATEGORIES = ["Soap", "Face Wash", "Bath Salt", "Face Pack", "Travel Kit"];
+const SCENTS = [
+  "Rose",
+  "Citrus",
+  "Lavender",
+  "Honey",
+  "Coffee",
+  "Charcoal",
+  "Cherry Blossom",
+  "Neem & Tulsi",
+  "Green Clay",
+  "Strawberry",
+  "Ubtan",
+  "Mixed",
+];
 const SORTS = [
   { value: "popular", label: "Most Popular" },
   { value: "newest", label: "Newest" },
@@ -87,7 +100,7 @@ export default function ProductsBrowser() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search lotions, soaps, scents…"
+            placeholder="Search soaps, face washes, scents…"
             aria-label="Search products"
             className="field pl-10"
           />
