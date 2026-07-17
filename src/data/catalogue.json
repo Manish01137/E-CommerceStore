@@ -5,7 +5,11 @@
     "slug": "shea-butter-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Rose", "Lemon", "Charcoal"],
+    "scents": [
+      "Rose",
+      "Lemon",
+      "Charcoal"
+    ],
     "price": 100,
     "compareAtPrice": null,
     "stock": 60,
@@ -27,7 +31,12 @@
     "slug": "goat-milk-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Orange Zest", "Honey", "Lavender", "Cherry Blossom"],
+    "scents": [
+      "Orange Zest",
+      "Honey",
+      "Lavender",
+      "Cherry Blossom"
+    ],
     "price": 100,
     "compareAtPrice": null,
     "stock": 72,
@@ -39,7 +48,7 @@
       "/products/goat-milk-cherry-blossom-soap.jpg",
       "/products/goat-milk-orange-zest-soap-2.jpg"
     ],
-    "description": "Fresh goat milk makes a bar unusually creamy — it feeds the skin rather than stripping it. Naturally rich in lactic acid, it gently smooths and brightens over time. Our most-loved everyday soap, in four honest scents.",
+    "description": "Fresh goat milk makes a bar unusually creamy \u2014 it feeds the skin rather than stripping it. Naturally rich in lactic acid, it gently smooths and brightens over time. Our most-loved everyday soap, in four honest scents.",
     "ingredients": "Fresh goat milk, saponified coconut & olive oils, glycerin, natural fragrance of the chosen variant, vitamin E.",
     "active": true,
     "createdAt": "2026-05-04T00:00:00.000Z"
@@ -64,9 +73,12 @@
     "stock": 84,
     "featured": false,
     "sold": 196,
-    "images": ["/products/ph-botanical-soap.svg"],
-    "description": "Our apothecary range — single-botanical bars built around one hard-working ingredient each. Kasturi manjal and papaya to brighten, neem to calm breakouts, multani mitti to lift oil, sandalwood and aloe to soothe. Pick the one your skin is asking for.",
-    "ingredients": "Saponified coconut & olive oils, glycerin, and the named botanical — papaya & wild turmeric, rose & lavender, aloe vera, sandalwood, activated charcoal, neem, or fuller's earth.",
+    "images": [
+      "/products/botanical-soap.jpg",
+      "/products/botanical-soap-2.jpg"
+    ],
+    "description": "Our apothecary range \u2014 single-botanical bars built around one hard-working ingredient each. Kasturi manjal and papaya to brighten, neem to calm breakouts, multani mitti to lift oil, sandalwood and aloe to soothe. Pick the one your skin is asking for.",
+    "ingredients": "Saponified coconut & olive oils, glycerin, and the named botanical \u2014 papaya & wild turmeric, rose & lavender, aloe vera, sandalwood, activated charcoal, neem, or fuller's earth.",
     "active": true,
     "createdAt": "2026-05-06T00:00:00.000Z"
   },
@@ -76,14 +88,20 @@
     "slug": "scrub-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Goat Milk Honey Oatmeal", "Ubtan", "Coffee Granules"],
+    "scents": [
+      "Goat Milk Honey Oatmeal",
+      "Ubtan",
+      "Coffee Granules"
+    ],
     "price": 130,
     "compareAtPrice": null,
     "stock": 48,
     "featured": true,
     "sold": 241,
-    "images": ["/products/scrub-soap-honey-oatmeal.jpg"],
-    "description": "A bar and a scrub in one. Colloidal oats, ubtan grains or coffee granules are suspended right through the soap, so you exfoliate as you wash — no separate step, no scratchy over-scrubbing. Two or three times a week is plenty.",
+    "images": [
+      "/products/scrub-soap-honey-oatmeal.jpg"
+    ],
+    "description": "A bar and a scrub in one. Colloidal oats, ubtan grains or coffee granules are suspended right through the soap, so you exfoliate as you wash \u2014 no separate step, no scratchy over-scrubbing. Two or three times a week is plenty.",
     "ingredients": "Saponified coconut & olive oils, glycerin, plus colloidal oatmeal & honey, gram flour & turmeric, or coffee granules depending on the variant.",
     "active": true,
     "createdAt": "2026-05-08T00:00:00.000Z"
@@ -94,7 +112,11 @@
     "slug": "clay-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Green French Clay", "Pink Rose Clay", "Kaolin Clay"],
+    "scents": [
+      "Green French Clay",
+      "Pink Rose Clay",
+      "Kaolin Clay"
+    ],
     "price": 130,
     "compareAtPrice": null,
     "stock": 40,
@@ -102,7 +124,7 @@
     "sold": 168,
     "images": [
       "/products/clay-soap-green-french.jpg",
-      "/products/ph-clay-soap.svg"
+      "/products/clay-soap-bars.jpg"
     ],
     "description": "Mineral clays draw oil and city grime out of congested skin without the tightness that comes from harsh surfactants. Green French clay for oily and acne-prone skin, pink rose clay for normal, kaolin for sensitive.",
     "ingredients": "Saponified coconut & olive oils, glycerin, French green clay, pink rose clay or kaolin clay, essential oils.",
@@ -115,14 +137,20 @@
     "slug": "signature-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Sandalwood Cinnamon Scrub", "Goat Milk with Saffron Strands"],
+    "scents": [
+      "Sandalwood Cinnamon Scrub",
+      "Goat Milk with Saffron Strands"
+    ],
     "price": 150,
     "compareAtPrice": null,
     "stock": 26,
     "featured": false,
     "sold": 132,
-    "images": ["/products/ph-signature-soap.svg"],
-    "description": "The two bars we make with our most precious ingredients. Mysore sandalwood ground with cinnamon for a warm, gently exfoliating bar; and goat milk with real saffron strands folded through — the one we make for gifting.",
+    "images": [
+      "/products/signature-soap.jpg",
+      "/products/signature-soap-2.jpg"
+    ],
+    "description": "The two bars we make with our most precious ingredients. Mysore sandalwood ground with cinnamon for a warm, gently exfoliating bar; and goat milk with real saffron strands folded through \u2014 the one we make for gifting.",
     "ingredients": "Saponified coconut & olive oils, glycerin, sandalwood powder & cinnamon, or goat milk & saffron strands, vitamin E.",
     "active": true,
     "createdAt": "2026-05-12T00:00:00.000Z"
@@ -133,7 +161,11 @@
     "slug": "flower-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Red Rose", "Pink Rose", "Assorted Flowers"],
+    "scents": [
+      "Red Rose",
+      "Pink Rose",
+      "Assorted Flowers"
+    ],
     "price": 120,
     "compareAtPrice": null,
     "stock": 54,
@@ -144,7 +176,7 @@
       "/products/flower-soap-red-rose.jpg",
       "/products/flower-soap-pink-rose-2.jpg"
     ],
-    "description": "Our prettiest bars — real petals set into clear glycerin, poured one at a time. They lather soft and rosy, and they look like something on a dressing table rather than a bathroom shelf. The gift people quietly keep for themselves.",
+    "description": "Our prettiest bars \u2014 real petals set into clear glycerin, poured one at a time. They lather soft and rosy, and they look like something on a dressing table rather than a bathroom shelf. The gift people quietly keep for themselves.",
     "ingredients": "Glycerin soap base, rose absolute, dried rose petals and assorted dried flowers, sweet almond oil.",
     "active": true,
     "createdAt": "2026-05-14T00:00:00.000Z"
@@ -155,7 +187,9 @@
     "slug": "toy-soap",
     "category": "Soap",
     "size": "100 gms",
-    "scents": ["Assorted"],
+    "scents": [
+      "Assorted"
+    ],
     "price": 150,
     "compareAtPrice": null,
     "stock": 44,
@@ -167,8 +201,8 @@
       "/products/toy-soap-3.jpg",
       "/products/toy-soap-4.jpg"
     ],
-    "description": "A little toy set inside a mild, tear-free glycerin bar — the trick that turns bath time from a negotiation into a treat. Kids wash until they can reach the toy. Gentle enough for the youngest skin, and no harsh chemicals.",
-    "ingredients": "Glycerin soap base, mild plant-derived surfactants, food-grade colour, light natural fragrance. Contains a small toy — adult supervision advised.",
+    "description": "A little toy set inside a mild, tear-free glycerin bar \u2014 the trick that turns bath time from a negotiation into a treat. Kids wash until they can reach the toy. Gentle enough for the youngest skin, and no harsh chemicals.",
+    "ingredients": "Glycerin soap base, mild plant-derived surfactants, food-grade colour, light natural fragrance. Contains a small toy \u2014 adult supervision advised.",
     "active": true,
     "createdAt": "2026-05-16T00:00:00.000Z"
   },
@@ -207,7 +241,7 @@
       "/products/bw-juicy-strawberry.jpg",
       "/products/bw-ocean-mist-2.jpg"
     ],
-    "description": "Sulphate-free from the first batch — no SLS, no SLES, so it lathers kindly and rinses clean without leaving skin squeaky and tight. Thirteen scents, from bracing Ocean Mist to Divine Lotus with jojoba beads.",
+    "description": "Sulphate-free from the first batch \u2014 no SLS, no SLES, so it lathers kindly and rinses clean without leaving skin squeaky and tight. Thirteen scents, from bracing Ocean Mist to Divine Lotus with jojoba beads.",
     "ingredients": "Aqua, mild plant-derived (sulphate-free) surfactants, glycerin, aloe vera, natural fragrance of the chosen variant, vitamin E. 200 ml.",
     "active": true,
     "createdAt": "2026-05-18T00:00:00.000Z"
@@ -218,14 +252,22 @@
     "slug": "body-lotion-250g",
     "category": "Body Lotion",
     "size": "250 gms",
-    "scents": ["Vanilla", "Orange", "Lavender", "Cherry Blossom"],
+    "scents": [
+      "Vanilla",
+      "Orange",
+      "Lavender",
+      "Cherry Blossom"
+    ],
     "price": 550,
     "compareAtPrice": null,
     "stock": 32,
     "featured": true,
     "sold": 204,
-    "images": ["/products/ph-body-lotion-250.svg"],
-    "description": "A daily lotion with enough butter in it to actually last the day, but light enough to dress over five minutes later. Our full 250g jar — the one that lives by the bed rather than in the travel bag.",
+    "images": [
+      "/products/body-lotion-whipped.jpg",
+      "/products/body-lotion-swirl.jpg"
+    ],
+    "description": "A daily lotion with enough butter in it to actually last the day, but light enough to dress over five minutes later. Our full 250g jar \u2014 the one that lives by the bed rather than in the travel bag.",
     "ingredients": "Aqua, shea & kokum butters, cold-pressed sweet almond oil, glycerin, aloe vera, natural fragrance of the chosen variant, vitamin E. 250 gms.",
     "active": true,
     "createdAt": "2026-05-20T00:00:00.000Z"
@@ -236,14 +278,22 @@
     "slug": "body-lotion-100g",
     "category": "Body Lotion",
     "size": "100 gms",
-    "scents": ["Vanilla", "Orange", "Lavender", "Cherry Blossom"],
+    "scents": [
+      "Vanilla",
+      "Orange",
+      "Lavender",
+      "Cherry Blossom"
+    ],
     "price": 300,
     "compareAtPrice": null,
     "stock": 46,
     "featured": false,
     "sold": 158,
-    "images": ["/products/ph-body-lotion-100.svg"],
-    "description": "The same whipped butter-and-almond-oil lotion in a 100g jar — the right size to try a new scent, keep in a handbag, or gift alongside a bar of soap.",
+    "images": [
+      "/products/body-lotion-swirl.jpg",
+      "/products/body-lotion-whipped.jpg"
+    ],
+    "description": "The same whipped butter-and-almond-oil lotion in a 100g jar \u2014 the right size to try a new scent, keep in a handbag, or gift alongside a bar of soap.",
     "ingredients": "Aqua, shea & kokum butters, cold-pressed sweet almond oil, glycerin, aloe vera, natural fragrance of the chosen variant, vitamin E. 100 gms.",
     "active": true,
     "createdAt": "2026-05-22T00:00:00.000Z"
@@ -254,13 +304,17 @@
     "slug": "dark-rose-body-scrub",
     "category": "Body Scrub",
     "size": "100 gms",
-    "scents": ["Dark Rose"],
+    "scents": [
+      "Dark Rose"
+    ],
     "price": 450,
     "compareAtPrice": null,
     "stock": 28,
     "featured": false,
     "sold": 121,
-    "images": ["/products/ph-body-scrub-dark-rose.svg"],
+    "images": [
+      "/products/body-scrub-rose-crystals.jpg"
+    ],
     "description": "Fine sugar and crushed dark rose petals in a nourishing oil base. It polishes away rough patches on knees, elbows and shoulders and leaves behind enough oil that you can skip lotion afterwards. Deeply, unapologetically rose.",
     "ingredients": "Cane sugar, dried dark rose petals, cold-pressed coconut & sweet almond oils, rose absolute, vitamin E. 100 gms.",
     "active": true,
@@ -295,7 +349,7 @@
       "/products/face-wash-orange.jpg",
       "/products/face-wash-strawberry.jpg"
     ],
-    "description": "Amino-acid based, which is the gentlest cleansing chemistry there is — SLS-free, SLES-free, paraben-free and silicone-free. It lifts oil and sunscreen without that stripped, squeaky feeling. Neem tulsi for breakouts, ubtan to brighten, coffee to wake up, rose and rose clay for calm, orange and strawberry for dullness.",
+    "description": "Amino-acid based, which is the gentlest cleansing chemistry there is \u2014 SLS-free, SLES-free, paraben-free and silicone-free. It lifts oil and sunscreen without that stripped, squeaky feeling. Neem tulsi for breakouts, ubtan to brighten, coffee to wake up, rose and rose clay for calm, orange and strawberry for dullness.",
     "ingredients": "Aqua, amino acid surfactants, glycerin, aloe vera, panthenol, botanical extract of the chosen variant, vitamin E. Free from SLS, SLES, parabens and silicones. 100 ml.",
     "active": true,
     "createdAt": "2026-05-26T00:00:00.000Z"
@@ -306,14 +360,20 @@
     "slug": "face-cream-100g",
     "category": "Face Cream",
     "size": "100 gms",
-    "scents": ["Lavender", "Jasmine", "Divine Floral"],
+    "scents": [
+      "Lavender",
+      "Jasmine",
+      "Divine Floral"
+    ],
     "price": 300,
     "compareAtPrice": null,
     "stock": 34,
     "featured": true,
     "sold": 186,
-    "images": ["/products/ph-face-cream-100.svg"],
-    "description": "A light, breathable face cream that sits well under makeup and doesn't leave a film. Lavender to calm, jasmine for evenings, and Divine Floral — our house blend, and the one people come back for.",
+    "images": [
+      "/products/face-cream-smear.jpg"
+    ],
+    "description": "A light, breathable face cream that sits well under makeup and doesn't leave a film. Lavender to calm, jasmine for evenings, and Divine Floral \u2014 our house blend, and the one people come back for.",
     "ingredients": "Aqua, aloe vera, shea butter, jojoba oil, glycerin, hyaluronic acid, floral extract of the chosen variant, vitamin E. 100 gms.",
     "active": true,
     "createdAt": "2026-05-28T00:00:00.000Z"
@@ -324,14 +384,20 @@
     "slug": "face-cream-50g",
     "category": "Face Cream",
     "size": "50 gms",
-    "scents": ["Lavender", "Jasmine", "Divine Floral"],
+    "scents": [
+      "Lavender",
+      "Jasmine",
+      "Divine Floral"
+    ],
     "price": 175,
     "compareAtPrice": null,
     "stock": 42,
     "featured": false,
     "sold": 143,
-    "images": ["/products/ph-face-cream-50.svg"],
-    "description": "The same cream in a 50g jar — a sensible way to find your scent before committing to the full size, and small enough for cabin baggage.",
+    "images": [
+      "/products/face-cream-smear.jpg"
+    ],
+    "description": "The same cream in a 50g jar \u2014 a sensible way to find your scent before committing to the full size, and small enough for cabin baggage.",
     "ingredients": "Aqua, aloe vera, shea butter, jojoba oil, glycerin, hyaluronic acid, floral extract of the chosen variant, vitamin E. 50 gms.",
     "active": true,
     "createdAt": "2026-05-30T00:00:00.000Z"
@@ -342,14 +408,18 @@
     "slug": "ubtan-face-pack",
     "category": "Face Pack",
     "size": "100 gms",
-    "scents": ["Ubtan"],
+    "scents": [
+      "Ubtan"
+    ],
     "price": 135,
     "compareAtPrice": null,
     "stock": 50,
     "featured": true,
     "sold": 214,
-    "images": ["/products/face-pack-ubtan.jpg"],
-    "description": "Our grandmother's ubtan, milled and jarred — gram flour, wild turmeric, sandalwood and rose petal, in powder form so it keeps without preservatives. Mix a spoon with rose water or milk, leave fifteen minutes, rinse. Chemical-free, vegan and cruelty-free.",
+    "images": [
+      "/products/face-pack-ubtan.jpg"
+    ],
+    "description": "Our grandmother's ubtan, milled and jarred \u2014 gram flour, wild turmeric, sandalwood and rose petal, in powder form so it keeps without preservatives. Mix a spoon with rose water or milk, leave fifteen minutes, rinse. Chemical-free, vegan and cruelty-free.",
     "ingredients": "Gram flour (besan), wild turmeric (kasturi manjal), sandalwood powder, rose petal powder, multani mitti. Powder form, 100 gms.",
     "active": true,
     "createdAt": "2026-06-01T00:00:00.000Z"
@@ -360,13 +430,18 @@
     "slug": "shampoo",
     "category": "Shampoo",
     "size": "200 ml",
-    "scents": ["Lavender", "Rosemary"],
+    "scents": [
+      "Lavender",
+      "Rosemary"
+    ],
     "price": 250,
     "compareAtPrice": null,
     "stock": 38,
     "featured": false,
     "sold": 149,
-    "images": ["/products/ph-shampoo.svg"],
+    "images": [
+      "/products/shampoo-lather.jpg"
+    ],
     "description": "Sulphate-free shampoo that actually lathers. Lavender to calm an itchy scalp, rosemary to support growth and shine. Safe on coloured and chemically treated hair, and gentle enough for everyday washing.",
     "ingredients": "Aqua, mild plant-derived (sulphate-free) surfactants, aloe vera, glycerin, lavender or rosemary essential oil, panthenol, vitamin E. 200 ml.",
     "active": true,
@@ -378,14 +453,19 @@
     "slug": "conditioner",
     "category": "Conditioner",
     "size": "200 ml",
-    "scents": ["Lavender", "Rosemary"],
+    "scents": [
+      "Lavender",
+      "Rosemary"
+    ],
     "price": 250,
     "compareAtPrice": null,
     "stock": 36,
     "featured": false,
     "sold": 138,
-    "images": ["/products/ph-conditioner.svg"],
-    "description": "A silicone-free conditioner — it detangles and softens without coating the hair in something you then need a harsh shampoo to strip off. Pair it with the matching shampoo.",
+    "images": [
+      "/products/conditioner-amber.jpg"
+    ],
+    "description": "A silicone-free conditioner \u2014 it detangles and softens without coating the hair in something you then need a harsh shampoo to strip off. Pair it with the matching shampoo.",
     "ingredients": "Aqua, cetearyl alcohol (plant-derived), shea butter, jojoba oil, glycerin, lavender or rosemary essential oil, vitamin E. Silicone-free. 200 ml.",
     "active": true,
     "createdAt": "2026-06-05T00:00:00.000Z"
@@ -396,7 +476,10 @@
     "slug": "bath-salt",
     "category": "Bath Salt",
     "size": "50 gms",
-    "scents": ["Lavender", "Himalayan Pink Salt"],
+    "scents": [
+      "Lavender",
+      "Himalayan Pink Salt"
+    ],
     "price": 175,
     "compareAtPrice": null,
     "stock": 44,
@@ -406,7 +489,7 @@
       "/products/bath-salt-lavender.jpg",
       "/products/bath-salt-himalayan-pink.jpg"
     ],
-    "description": "Epsom and mineral salts steeped with pure essential oil. Twenty minutes in a warm tub and the day genuinely dissolves. Suitable for both men and women — and a good one to keep for the evening after a long week.",
+    "description": "Epsom and mineral salts steeped with pure essential oil. Twenty minutes in a warm tub and the day genuinely dissolves. Suitable for both men and women \u2014 and a good one to keep for the evening after a long week.",
     "ingredients": "Epsom salt, sea salt or Himalayan pink salt, lavender essential oil, dried lavender buds, jojoba oil. Net wt. 50 gms.",
     "active": true,
     "createdAt": "2026-06-07T00:00:00.000Z"
@@ -417,7 +500,9 @@
     "slug": "travel-kit",
     "category": "Travel Kit",
     "size": "5 minis",
-    "scents": ["Assorted"],
+    "scents": [
+      "Assorted"
+    ],
     "price": 250,
     "compareAtPrice": null,
     "stock": 30,
@@ -427,8 +512,8 @@
       "/products/travel-kit-essentials.jpg",
       "/products/travel-kit-essentials-2.jpg"
     ],
-    "description": "Everything you actually use, in cabin-friendly sizes, in a clear zip pouch: body lotion, body wash, face wash, shower gel and a soap bar. The one we sell most of in December — and the one people quietly keep for themselves.",
-    "ingredients": "Contains five travel minis — 50ml body lotion, 50ml body wash, 50ml face wash, 50ml shower gel and one artisan soap bar. Scents vary by kit.",
+    "description": "Everything you actually use, in cabin-friendly sizes, in a clear zip pouch: body lotion, body wash, face wash, shower gel and a soap bar. The one we sell most of in December \u2014 and the one people quietly keep for themselves.",
+    "ingredients": "Contains five travel minis \u2014 50ml body lotion, 50ml body wash, 50ml face wash, 50ml shower gel and one artisan soap bar. Scents vary by kit.",
     "active": true,
     "createdAt": "2026-06-09T00:00:00.000Z"
   }

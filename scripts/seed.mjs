@@ -50,6 +50,35 @@ async function seed() {
   });
   if (count > 0) console.log(`✓ Retired ${count} product(s) no longer in the price list`);
 
+  // Starter reviews — sample content for the owner to curate or replace from
+  // the admin side. Only inserted while the reviews table is empty, so real
+  // customer reviews are never touched by a re-seed.
+  const reviewCount = await prisma.review.count();
+  if (reviewCount === 0) {
+    const bySlug = async (slug) =>
+      (await prisma.product.findUnique({ where: { slug } }))?.id;
+    const samples = [
+      ["goat-milk-soap", "Aditi Sharma", 5, "Softest my hands have felt", "The honey one is my favourite — creamy lather and my skin doesn't feel tight afterwards. Ordered twice already."],
+      ["body-wash", "Rohan Iyer", 5, "Ocean Mist is addictive", "Sulphate-free but still foams properly. The scent is fresh without being perfumey. Whole family uses it now."],
+      ["face-wash", "Meghna Pillai", 4, "Neem tulsi calmed my skin", "Breakouts reduced noticeably in two weeks. It doesn't dry me out like my old face wash did."],
+      ["flower-soap", "Kavya Nair", 5, "Too pretty to use (I used it)", "Bought as a gift, kept it myself. The rose petals inside are real and it smells like a garden."],
+      ["ubtan-face-pack", "Sneha Kulkarni", 5, "Just like my nani made", "Mixed with rose water, fifteen minutes, and my face genuinely glows. Powder form means it lasts."],
+      ["bath-salt", "Arjun Mehta", 4, "Sunday evening ritual", "The lavender salt turns an ordinary bath into something worth planning the day around."],
+    ];
+    let created = 0;
+    for (const [slug, authorName, rating, title, comment] of samples) {
+      const productId = await bySlug(slug);
+      if (!productId) continue;
+      await prisma.review.create({
+        data: { productId, authorName, rating, title, comment },
+      });
+      created += 1;
+    }
+    console.log(`✓ Seeded ${created} starter reviews`);
+  } else {
+    console.log(`✓ Reviews already present (${reviewCount}) — left untouched`);
+  }
+
   const existing = await prisma.user.findUnique({ where: { email: ADMIN_EMAIL } });
   if (existing) {
     console.log(`✓ Admin user already exists: ${ADMIN_EMAIL}`);

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getProductBySlug, getRelated } from "@/lib/products";
 import ProductDetail from "@/components/product/ProductDetail";
+import ProductReviews from "@/components/product/ProductReviews";
 import ProductCard from "@/components/product/ProductCard";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 
@@ -30,6 +31,8 @@ export default async function ProductDetailPage({ params }: Props) {
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8 lg:py-16">
       <ProductDetail product={product} />
+
+      <ProductReviews productId={product._id} slug={product.slug} />
 
       {related.length > 0 && (
         <section className="mt-20 lg:mt-28">

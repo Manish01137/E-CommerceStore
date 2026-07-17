@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getFeatured } from "@/lib/products";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
+import HomeReviews from "@/components/home/HomeReviews";
 
 export const dynamic = "force-dynamic";
 
@@ -367,6 +368,9 @@ export default async function HomePage() {
           </Stagger>
         </div>
       </section>
+
+      {/* ── Customer reviews ─────────────────────────────────── */}
+      <HomeReviews />
     </div>
   );
 }

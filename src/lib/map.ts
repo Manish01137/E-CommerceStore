@@ -1,9 +1,10 @@
-import type { Product, Order, OrderItem, Address, Enquiry, User } from "@/generated/prisma";
+import type { Product, Order, OrderItem, Address, Enquiry, User, Review } from "@/generated/prisma";
 import type {
   ProductDTO,
   OrderDTO,
   AddressDTO,
   EnquiryDTO,
+  ReviewDTO,
 } from "@/lib/types";
 
 /**
@@ -106,5 +107,18 @@ export function toEnquiryDTO(e: Enquiry): EnquiryDTO {
     message: e.message,
     status: e.status,
     createdAt: e.createdAt.toISOString(),
+  };
+}
+
+export function toReviewDTO(r: Review, viewerUserId?: string | null): ReviewDTO {
+  return {
+    _id: r.id,
+    productId: r.productId,
+    authorName: r.authorName,
+    rating: r.rating,
+    title: r.title,
+    comment: r.comment,
+    mine: Boolean(viewerUserId && r.userId === viewerUserId),
+    createdAt: r.createdAt.toISOString(),
   };
 }

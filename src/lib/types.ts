@@ -117,3 +117,20 @@ export interface EnquiryDTO {
   status: string;
   createdAt: string;
 }
+
+export interface ReviewDTO {
+  _id: string;
+  productId: string;
+  authorName: string;
+  rating: number;
+  title: string;
+  comment: string;
+  /** Set when the viewer wrote this review (drives the edit state). */
+  mine?: boolean;
+  createdAt: string;
+}
+
+export interface ReviewSummary {
+  average: number;
+  count: number;
+}
