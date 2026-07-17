@@ -14,6 +14,18 @@ export function formatDate(date: string | Date): string {
   }).format(new Date(date));
 }
 
+const UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/**
+ * Postgres raises "invalid input syntax for type uuid" on a malformed id, so
+ * route params are checked before they reach a query — a bad id should 404,
+ * not 500.
+ */
+export function isUuid(value: string): boolean {
+  return UUID_RE.test(value);
+}
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()

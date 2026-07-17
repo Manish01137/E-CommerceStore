@@ -1,8 +1,44 @@
+/**
+ * DTOs shared between server and client components.
+ *
+ * `_id` is a string on every entity. It's a Postgres uuid now (it was a Mongo
+ * ObjectId before); the name is kept so the cart, which persists product ids in
+ * localStorage, keeps working across the migration.
+ */
+
+export const CATEGORIES = [
+  "Soap",
+  "Body Wash",
+  "Body Lotion",
+  "Body Scrub",
+  "Face Wash",
+  "Face Cream",
+  "Face Pack",
+  "Shampoo",
+  "Conditioner",
+  "Bath Salt",
+  "Travel Kit",
+] as const;
+
+export const ORDER_STATUSES = [
+  "placed",
+  "processing",
+  "shipped",
+  "delivered",
+  "cancelled",
+] as const;
+
+export const PAYMENT_STATUSES = ["pending", "paid", "failed", "refunded"] as const;
+
+export const ENQUIRY_STATUSES = ["new", "contacted", "closed"] as const;
+
 export interface ProductDTO {
   _id: string;
   name: string;
   slug: string;
   category: string;
+  /** Pack size, e.g. "200 ml" or "100 gms". */
+  size?: string;
   scents: string[];
   description: string;
   ingredients: string;
@@ -80,9 +116,4 @@ export interface EnquiryDTO {
   message: string;
   status: string;
   createdAt: string;
-}
-
-/** Convert a Mongoose doc/lean object into a JSON-safe plain object. */
-export function toJSON<T>(doc: unknown): T {
-  return JSON.parse(JSON.stringify(doc)) as T;
 }

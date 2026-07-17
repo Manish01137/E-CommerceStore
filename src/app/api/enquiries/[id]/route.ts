@@ -1,9 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
-import mongoose from "mongoose";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import Enquiry, { ENQUIRY_STATUSES } from "@/models/Enquiry";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { isUuid } from "@/lib/format";
+import { toEnquiryDTO } from "@/lib/map";
+import { ENQUIRY_STATUSES } from "@/lib/types";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 type Params = { params: Promise<{ id: string }> };
@@ -18,17 +19,21 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  await dbConnect();
   const { id } = await params;
-  if (!mongoose.isValidObjectId(id)) {
-    return NextResponse.json({ error: "Not found" }, { status: 404 });
-  }
+  if (!isUuid(id)) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
   const body = await req.json().catch(() => null);
   const parsed = patchSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
-  const enquiry = await Enquiry.findByIdAndUpdate(id, { status: parsed.data.status }, { new: true }).lean();
-  if (!enquiry) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  return NextResponse.json({ enquiry });
+
+  const existing = await prisma.enquiry.findUnique({ where: { id } });
+  if (!existing) return NextResponse.json({ error: "Not found" }, { status: 404 });
+
+  const enquiry = await prisma.enquiry.update({
+    where: { id },
+    data: { status: parsed.data.status },
+  });
+  return NextResponse.json({ enquiry: toEnquiryDTO(enquiry) });
 }

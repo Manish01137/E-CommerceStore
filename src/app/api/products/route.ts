@@ -1,25 +1,23 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { dbConnect } from "@/lib/db";
-import Product, { CATEGORIES, SCENTS } from "@/models/Product";
+import { z } from "zod";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { slugify } from "@/lib/format";
 import { listProducts } from "@/lib/products";
+import { toProductDTO } from "@/lib/map";
+import { CATEGORIES } from "@/lib/types";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
-import { z } from "zod";
 
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
-
   const rawCategory = params.get("category");
-  const rawScent = params.get("scent");
 
   const products = await listProducts({
     category:
       rawCategory && (CATEGORIES as readonly string[]).includes(rawCategory)
         ? rawCategory
         : null,
-    scent:
-      rawScent && (SCENTS as readonly string[]).includes(rawScent) ? rawScent : null,
+    scent: params.get("scent") || null,
     q: params.get("q")?.trim() || null,
     sort: params.get("sort"),
   });
@@ -30,11 +28,12 @@ export async function GET(req: NextRequest) {
 const productSchema = z.object({
   name: z.string().min(2),
   category: z.enum(CATEGORIES),
-  scents: z.array(z.enum(SCENTS)).min(1),
+  size: z.string().optional().default(""),
+  scents: z.array(z.string().min(1)).min(1),
   description: z.string().min(10),
   ingredients: z.string().optional().default(""),
-  price: z.number().positive(),
-  compareAtPrice: z.number().positive().nullable().optional(),
+  price: z.number().int().positive(),
+  compareAtPrice: z.number().int().positive().nullable().optional(),
   images: z.array(z.string()).optional().default([]),
   stock: z.number().int().min(0),
   featured: z.boolean().optional().default(false),
@@ -49,7 +48,6 @@ export async function POST(req: NextRequest) {
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  await dbConnect();
 
   const body = await req.json().catch(() => null);
   const parsed = productSchema.safeParse(body);
@@ -61,10 +59,12 @@ export async function POST(req: NextRequest) {
   }
 
   let slug = slugify(parsed.data.name);
-  if (await Product.exists({ slug })) {
+  if (await prisma.product.findUnique({ where: { slug } })) {
     slug = `${slug}-${Date.now().toString(36)}`;
   }
 
-  const product = await Product.create({ ...parsed.data, slug });
-  return NextResponse.json({ product }, { status: 201 });
+  const product = await prisma.product.create({
+    data: { ...parsed.data, slug },
+  });
+  return NextResponse.json({ product: toProductDTO(product) }, { status: 201 });
 }

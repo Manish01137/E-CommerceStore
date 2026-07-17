@@ -1,7 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import Order from "@/models/Order";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { isRazorpayConfigured, verifyPaymentSignature } from "@/lib/razorpay";
 import { fulfilPaidOrder, markPaymentFailed } from "@/lib/fulfil";
@@ -26,16 +25,14 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Payment gateway not configured" }, { status: 503 });
   }
 
-  await dbConnect();
   const body = await req.json().catch(() => null);
   const parsed = verifySchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ error: "Invalid payment payload" }, { status: 400 });
   }
 
-  const order = await Order.findOne({
-    _id: parsed.data.orderId,
-    user: session.userId,
+  const order = await prisma.order.findFirst({
+    where: { id: parsed.data.orderId, userId: session.userId },
   });
   if (!order) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
@@ -54,12 +51,15 @@ export async function POST(req: NextRequest) {
   });
 
   if (!valid) {
-    await markPaymentFailed(order._id.toString());
+    await markPaymentFailed(order.id);
     return NextResponse.json({ error: "Payment verification failed" }, { status: 400 });
   }
 
-  order.razorpayPaymentId = parsed.data.razorpay_payment_id;
-  await fulfilPaidOrder(order);
+  await prisma.order.update({
+    where: { id: order.id },
+    data: { razorpayPaymentId: parsed.data.razorpay_payment_id },
+  });
+  await fulfilPaidOrder(order.id);
 
   return NextResponse.json({ ok: true, orderNumber: order.orderNumber });
 }

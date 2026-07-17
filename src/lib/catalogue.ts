@@ -24,7 +24,10 @@ export function filterCatalogue(opts: {
     if (opts.category && p.category !== opts.category) return false;
     if (opts.scent && !p.scents.includes(opts.scent)) return false;
     if (q) {
-      const haystack = `${p.name} ${p.description} ${p.category}`.toLowerCase();
+      // Same fields the Postgres query searches — including scents, which are
+      // often the only place a term like "honey" appears.
+      const haystack =
+        `${p.name} ${p.description} ${p.category} ${p.ingredients} ${p.scents.join(" ")}`.toLowerCase();
       if (!haystack.includes(q)) return false;
     }
     return true;

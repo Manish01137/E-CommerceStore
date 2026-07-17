@@ -148,6 +148,100 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Our Mission ──────────────────────────────────────── */}
+      <section className="bg-almond py-20 lg:py-28">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <p className="eyebrow text-moss-dark">Our Mission</p>
+            <h2 className="mt-4 text-display">
+              Making the switch to safe, natural skincare.
+            </h2>
+            <p className="mt-6 text-lg leading-relaxed text-earth">
+              At Ethereal Artisan, our mission is to inspire a healthier, more
+              mindful approach to skincare by helping people make the switch
+              from harsh chemical-based products to safe, natural alternatives.
+              We believe that skincare should nourish and protect your skin
+              without compromising your well-being or the environment.
+            </p>
+          </Reveal>
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-3">
+            <Reveal delay={0.06}>
+              <article className="card flex h-full flex-col overflow-hidden">
+                <div className="relative aspect-[5/3] w-full">
+                  <Image
+                    src="/banners/banner-hands.jpg"
+                    alt="Hands holding freshly cut bars of handmade soap"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-7">
+                  <h3 className="font-serif text-2xl">Thoughtfully handcrafted</h3>
+                  <p className="mt-3 leading-relaxed text-earth">
+                    Every product we create is thoughtfully handcrafted using
+                    carefully selected natural ingredients — poured, cured and
+                    checked by the same pair of hands that made it.
+                  </p>
+                </div>
+              </article>
+            </Reveal>
+
+            <Reveal delay={0.14}>
+              <article className="card flex h-full flex-col overflow-hidden">
+                <div className="relative aspect-[5/3] w-full">
+                  <Image
+                    src="/banners/banner-mission.jpg"
+                    alt="Two bars of natural soap, one tied with garden twine"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-7">
+                  <h3 className="font-serif text-2xl">Gentle, without compromise</h3>
+                  <p className="mt-3 leading-relaxed text-earth">
+                    Our commitment is to provide gentle, effective skincare
+                    solutions that are free from unnecessary harsh chemicals,
+                    allowing you to embrace a cleaner, healthier beauty routine
+                    with confidence.
+                  </p>
+                </div>
+              </article>
+            </Reveal>
+
+            <Reveal delay={0.22}>
+              <article className="card flex h-full flex-col overflow-hidden">
+                <div className="relative aspect-[5/3] w-full">
+                  <Image
+                    src="/banners/banner-stack.jpg"
+                    alt="A stack of naturally coloured handmade soap bars"
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 33vw"
+                    className="object-cover"
+                  />
+                </div>
+                <div className="flex flex-1 flex-col p-7">
+                  <h3 className="font-serif text-2xl">Accessible &amp; sustainable</h3>
+                  <p className="mt-3 leading-relaxed text-earth">
+                    We strive to make natural skincare accessible, trustworthy
+                    and sustainable — because everyone deserves products that
+                    are kind to their skin, their loved ones, and the planet.
+                  </p>
+                </div>
+              </article>
+            </Reveal>
+          </div>
+
+          <Reveal delay={0.28} className="mt-12 text-center">
+            <Link href="/about" className="btn btn-outline">
+              Read our story
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
       {/* ── Craft banner (full-bleed) ────────────────────────── */}
       <section className="relative isolate overflow-hidden">
         <div className="absolute inset-0 -z-10">

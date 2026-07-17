@@ -1,8 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import User from "@/models/User";
+import { prisma } from "@/lib/db";
 import { signSession, setSessionCookie } from "@/lib/auth";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
@@ -15,7 +14,7 @@ export async function POST(req: NextRequest) {
   if (!DB_ENABLED) {
     return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
   }
-  await dbConnect();
+
   const body = await req.json().catch(() => null);
   const parsed = loginSchema.safeParse(body);
   if (!parsed.success) {
@@ -25,17 +24,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { email, password } = parsed.data;
-  const user = await User.findOne({ email });
-  if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
+  const email = parsed.data.email.toLowerCase().trim();
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user || !(await bcrypt.compare(parsed.data.password, user.passwordHash))) {
     return NextResponse.json({ error: "Incorrect email or password" }, { status: 401 });
   }
 
   const token = await signSession({
-    userId: user._id.toString(),
+    userId: user.id,
     name: user.name,
     email: user.email,
-    role: user.role as "customer" | "admin",
+    role: user.role,
   });
   await setSessionCookie(token);
 

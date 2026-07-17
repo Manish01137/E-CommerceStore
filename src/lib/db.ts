@@ -1,34 +1,32 @@
-import mongoose from "mongoose";
+import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaClient } from "@/generated/prisma";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/terra-botanica";
-
-interface MongooseCache {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
-}
-
-// Persist the connection across hot reloads in dev
-const globalWithMongoose = global as typeof globalThis & {
-  _mongoose?: MongooseCache;
+/**
+ * Prisma client singleton.
+ *
+ * Connects through DATABASE_URL — on Supabase that's the transaction pooler
+ * (pgbouncer, port 6543), because serverless functions open many short-lived
+ * connections and would exhaust a direct pool. Migrations use DIRECT_URL
+ * instead; see prisma.config.ts.
+ *
+ * The global cache stops hot-reload in dev from opening a new pool per edit.
+ */
+const globalForPrisma = global as typeof globalThis & {
+  _prisma?: PrismaClient;
 };
 
-const cache: MongooseCache = globalWithMongoose._mongoose ?? {
-  conn: null,
-  promise: null,
-};
-globalWithMongoose._mongoose = cache;
-
-export async function dbConnect(): Promise<typeof mongoose> {
-  if (cache.conn) return cache.conn;
-  if (!cache.promise) {
-    cache.promise = mongoose.connect(MONGODB_URI, { bufferCommands: false });
-  }
-  try {
-    cache.conn = await cache.promise;
-  } catch (err) {
-    cache.promise = null;
-    throw err;
-  }
-  return cache.conn;
+function createClient(): PrismaClient {
+  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+  return new PrismaClient({
+    adapter,
+    log: process.env.NODE_ENV === "development" ? ["warn", "error"] : ["error"],
+  });
 }
+
+export const prisma: PrismaClient = globalForPrisma._prisma ?? createClient();
+
+if (process.env.NODE_ENV !== "production") {
+  globalForPrisma._prisma = prisma;
+}
+
+export default prisma;

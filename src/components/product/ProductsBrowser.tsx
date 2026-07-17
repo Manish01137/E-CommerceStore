@@ -5,22 +5,8 @@ import { useSearchParams } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import type { ProductDTO } from "@/lib/types";
 import ProductCard from "./ProductCard";
+import type { Facets } from "@/lib/products";
 
-const CATEGORIES = ["Soap", "Face Wash", "Bath Salt", "Face Pack", "Travel Kit"];
-const SCENTS = [
-  "Rose",
-  "Citrus",
-  "Lavender",
-  "Honey",
-  "Coffee",
-  "Charcoal",
-  "Cherry Blossom",
-  "Neem & Tulsi",
-  "Green Clay",
-  "Strawberry",
-  "Ubtan",
-  "Mixed",
-];
 const SORTS = [
   { value: "popular", label: "Most Popular" },
   { value: "newest", label: "Newest" },
@@ -28,7 +14,7 @@ const SORTS = [
   { value: "price-desc", label: "Price: High to Low" },
 ];
 
-export default function ProductsBrowser() {
+export default function ProductsBrowser({ facets }: { facets: Facets }) {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [loading, setLoading] = useState(true);
@@ -114,7 +100,7 @@ export default function ProductsBrowser() {
             className="field w-auto cursor-pointer"
           >
             <option value="">All Categories</option>
-            {CATEGORIES.map((c) => (
+            {facets.categories.map((c) => (
               <option key={c} value={c}>{c}</option>
             ))}
           </select>
@@ -126,7 +112,7 @@ export default function ProductsBrowser() {
             className="field w-auto cursor-pointer"
           >
             <option value="">All Scents</option>
-            {SCENTS.map((s) => (
+            {facets.scents.map((s) => (
               <option key={s} value={s}>{s}</option>
             ))}
           </select>

@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import User from "@/models/User";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { toAddressDTO } from "@/lib/map";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const addressSchema = z.object({
@@ -22,9 +22,12 @@ export async function GET() {
   }
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  await dbConnect();
-  const user = await User.findById(session.userId).select("addresses").lean();
-  return NextResponse.json({ addresses: user?.addresses ?? [] });
+
+  const addresses = await prisma.address.findMany({
+    where: { userId: session.userId },
+    orderBy: { createdAt: "asc" },
+  });
+  return NextResponse.json({ addresses: addresses.map(toAddressDTO) });
 }
 
 export async function POST(req: NextRequest) {
@@ -34,7 +37,6 @@ export async function POST(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await dbConnect();
   const body = await req.json().catch(() => null);
   const parsed = addressSchema.safeParse(body);
   if (!parsed.success) {
@@ -44,12 +46,15 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const user = await User.findByIdAndUpdate(
-    session.userId,
-    { $push: { addresses: parsed.data } },
-    { new: true }
-  ).select("addresses");
-  return NextResponse.json({ addresses: user?.addresses ?? [] }, { status: 201 });
+  await prisma.address.create({
+    data: { ...parsed.data, userId: session.userId },
+  });
+
+  const addresses = await prisma.address.findMany({
+    where: { userId: session.userId },
+    orderBy: { createdAt: "asc" },
+  });
+  return NextResponse.json({ addresses: addresses.map(toAddressDTO) }, { status: 201 });
 }
 
 export async function DELETE(req: NextRequest) {
@@ -59,14 +64,17 @@ export async function DELETE(req: NextRequest) {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  await dbConnect();
   const addressId = req.nextUrl.searchParams.get("id");
   if (!addressId) return NextResponse.json({ error: "Missing address id" }, { status: 400 });
 
-  const user = await User.findByIdAndUpdate(
-    session.userId,
-    { $pull: { addresses: { _id: addressId } } },
-    { new: true }
-  ).select("addresses");
-  return NextResponse.json({ addresses: user?.addresses ?? [] });
+  // Scope the delete to the session user — an id alone must not be enough.
+  await prisma.address.deleteMany({
+    where: { id: addressId, userId: session.userId },
+  });
+
+  const addresses = await prisma.address.findMany({
+    where: { userId: session.userId },
+    orderBy: { createdAt: "asc" },
+  });
+  return NextResponse.json({ addresses: addresses.map(toAddressDTO) });
 }

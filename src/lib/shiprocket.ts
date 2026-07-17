@@ -1,5 +1,4 @@
-import type mongoose from "mongoose";
-import type { OrderDoc } from "@/models/Order";
+import type { Order, OrderItem } from "@/generated/prisma";
 
 const BASE = "https://apiv2.shiprocket.in/v1/external";
 
@@ -41,16 +40,13 @@ interface ShipmentResult {
 
 /**
  * Create a Shiprocket order for a paid store order.
- * Returns null (after logging) on any failure — shipping problems must
- * never break the payment flow; admins can retry from the panel.
+ * Returns null (after logging) on any failure — shipping problems must never
+ * break the payment flow; admins can retry from the panel.
  */
 export async function createShipment(
-  order: mongoose.HydratedDocument<OrderDoc>
+  order: Order & { items: OrderItem[] }
 ): Promise<ShipmentResult | null> {
   if (!isShiprocketConfigured()) return null;
-
-  const addr = order.shippingAddress;
-  if (!addr) return null;
 
   try {
     const token = await getToken();
@@ -63,25 +59,22 @@ export async function createShipment(
       },
       body: JSON.stringify({
         order_id: order.orderNumber,
-        order_date: new Date(order.get("createdAt") ?? Date.now())
-          .toISOString()
-          .slice(0, 16)
-          .replace("T", " "),
+        order_date: order.createdAt.toISOString().slice(0, 16).replace("T", " "),
         pickup_location: process.env.SHIPROCKET_PICKUP_LOCATION || "Primary",
-        billing_customer_name: addr.fullName,
+        billing_customer_name: order.shipFullName,
         billing_last_name: "",
-        billing_address: addr.line1,
-        billing_address_2: addr.line2,
-        billing_city: addr.city,
-        billing_pincode: addr.pincode,
-        billing_state: addr.state,
+        billing_address: order.shipLine1,
+        billing_address_2: order.shipLine2,
+        billing_city: order.shipCity,
+        billing_pincode: order.shipPincode,
+        billing_state: order.shipState,
         billing_country: "India",
-        billing_email: addr.email,
-        billing_phone: addr.phone,
+        billing_email: order.shipEmail,
+        billing_phone: order.shipPhone,
         shipping_is_billing: true,
         order_items: order.items.map((item) => ({
           name: item.scent ? `${item.name} (${item.scent})` : item.name,
-          sku: `${item.product}`.slice(-12),
+          sku: item.productId.slice(-12),
           units: item.quantity,
           selling_price: item.price,
         })),

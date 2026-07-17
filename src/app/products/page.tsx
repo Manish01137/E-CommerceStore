@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Reveal from "@/components/motion/Reveal";
+import { getFacets } from "@/lib/products";
 import ProductsBrowser from "@/components/product/ProductsBrowser";
 
 export const metadata: Metadata = {
@@ -9,7 +10,10 @@ export const metadata: Metadata = {
     "The full Ethereal Artisan catalogue — organic lotions, face creams, bath salts, clays, scrubs and soaps.",
 };
 
-export default function ProductsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function ProductsPage() {
+  const facets = await getFacets();
   return (
     <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
       <Reveal>
@@ -21,7 +25,7 @@ export default function ProductsPage() {
         </p>
       </Reveal>
       <Suspense>
-        <ProductsBrowser />
+        <ProductsBrowser facets={facets} />
       </Suspense>
     </div>
   );

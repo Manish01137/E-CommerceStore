@@ -16,9 +16,15 @@ export const metadata: Metadata = {
 
 const CATEGORY_TILES = [
   { name: "Soap", blurb: "Hand-poured artisan bars" },
+  { name: "Body Wash", blurb: "Sulphate-free, 13 scents" },
+  { name: "Body Lotion", blurb: "Whipped butter & oils" },
+  { name: "Body Scrub", blurb: "Sugar & rose polish" },
   { name: "Face Wash", blurb: "Amino-acid cleansers" },
+  { name: "Face Cream", blurb: "Light daily moisture" },
+  { name: "Face Pack", blurb: "Ubtan, powder form" },
+  { name: "Shampoo", blurb: "Sulphate-free hair care" },
+  { name: "Conditioner", blurb: "Silicone-free softness" },
   { name: "Bath Salt", blurb: "Mineral-rich soaks" },
-  { name: "Face Pack", blurb: "Clay & botanical masks" },
   { name: "Travel Kit", blurb: "Rituals, cabin-sized" },
 ];
 
@@ -60,7 +66,7 @@ export default async function ShopPage() {
       {/* Category tiles */}
       <section className="bg-almond pb-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+          <Stagger className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
             {CATEGORY_TILES.map((c) => (
               <StaggerItem key={c.name}>
                 <Link

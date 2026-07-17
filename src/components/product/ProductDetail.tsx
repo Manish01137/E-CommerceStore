@@ -100,7 +100,10 @@ export default function ProductDetail({ product }: { product: ProductDTO }) {
         transition={{ duration: 0.55, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
         className="lg:pt-12"
       >
-        <p className="eyebrow text-moss-dark">{product.category}</p>
+        <p className="eyebrow text-moss-dark">
+          {product.category}
+          {product.size && <span className="text-earth"> · {product.size}</span>}
+        </p>
         <h1 className="mt-3 font-serif text-4xl leading-tight lg:text-5xl">{product.name}</h1>
 
         <div className="mt-4 flex items-baseline gap-3">

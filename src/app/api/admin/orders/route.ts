@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { dbConnect } from "@/lib/db";
-import Order from "@/models/Order";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { toOrderDTO } from "@/lib/map";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 export async function GET() {
@@ -12,10 +12,13 @@ export async function GET() {
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  await dbConnect();
-  const orders = await Order.find()
-    .sort({ createdAt: -1 })
-    .populate("user", "name email")
-    .lean();
-  return NextResponse.json({ orders });
+
+  const orders = await prisma.order.findMany({
+    include: {
+      items: true,
+      user: { select: { id: true, name: true, email: true } },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  return NextResponse.json({ orders: orders.map(toOrderDTO) });
 }

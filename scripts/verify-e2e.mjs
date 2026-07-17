@@ -32,14 +32,14 @@ const errors = [];
 page.on("pageerror", (e) => errors.push(e.message));
 
 // 1. product detail → add to cart → drawer
-await page.goto(`${BASE}/products/cherry-blossom-rose-soap`, { waitUntil: "networkidle" });
-await page.getByRole("radio", { name: "Rose" }).click();
+await page.goto(`${BASE}/products/body-wash`, { waitUntil: "networkidle" });
+await page.getByRole("radio", { name: "Ocean Mist" }).click();
 await page.getByRole("button", { name: "Add to Cart" }).click();
 await page.waitForTimeout(600);
 await page.getByRole("button", { name: "View Cart" }).click();
 await page.waitForTimeout(700);
 const drawerText = await page.getByRole("dialog", { name: "Shopping cart" }).textContent();
-console.log("cart drawer has item:", drawerText.includes("Cherry Blossom"), "| scent:", drawerText.includes("Rose"));
+console.log("cart drawer has item:", drawerText.includes("Body Wash"), "| scent:", drawerText.includes("Ocean Mist"));
 await page.screenshot({ path: `${OUT}/e2e-drawer.png` });
 
 // 2. proceed to checkout → redirected to login → register a fresh user
@@ -59,7 +59,7 @@ console.log("registered and landed on:", new URL(page.url()).pathname);
 // 3. back to checkout — cart persisted?
 await page.goto(`${BASE}/checkout`, { waitUntil: "networkidle" });
 const summary = await page.textContent("body");
-console.log("checkout shows item:", summary.includes("Cherry Blossom"));
+console.log("checkout shows item:", summary.includes("Body Wash"));
 
 // 4. fill address, submit invalid first (validation), then valid
 await page.getByRole("button", { name: /^Pay/ }).click();
@@ -82,7 +82,7 @@ console.log("order confirmation url:", new URL(page.url()).pathname + new URL(pa
 await page.waitForTimeout(1200);
 const confText = await page.textContent("body");
 console.log("confirmation banner:", confText.includes("your order is confirmed"));
-console.log("order number shown:", /TB-[A-Z0-9]+/.test(confText));
+console.log("order number shown:", /EA-[A-Z0-9]+/.test(confText));
 await page.screenshot({ path: `${OUT}/e2e-confirmation.png`, fullPage: true });
 
 // 6. cart cleared?

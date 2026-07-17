@@ -6,20 +6,18 @@ import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/Toast";
 import type { ProductDTO } from "@/lib/types";
 
-const CATEGORIES = ["Soap", "Face Wash", "Bath Salt", "Face Pack", "Travel Kit"];
-const SCENTS = [
-  "Rose",
-  "Citrus",
-  "Lavender",
-  "Honey",
-  "Coffee",
-  "Charcoal",
-  "Cherry Blossom",
-  "Neem & Tulsi",
-  "Green Clay",
-  "Strawberry",
-  "Ubtan",
-  "Mixed",
+const CATEGORIES = [
+  "Soap",
+  "Body Wash",
+  "Body Lotion",
+  "Body Scrub",
+  "Face Wash",
+  "Face Cream",
+  "Face Pack",
+  "Shampoo",
+  "Conditioner",
+  "Bath Salt",
+  "Travel Kit",
 ];
 
 interface Props {
@@ -36,6 +34,7 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
   const [values, setValues] = useState({
     name: product?.name ?? "",
     category: product?.category ?? "",
+    size: product?.size ?? "",
     scents: product?.scents ?? ([] as string[]),
     description: product?.description ?? "",
     ingredients: product?.ingredients ?? "",
@@ -50,13 +49,19 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const toggleScent = (scent: string) =>
-    setValues((v) => ({
-      ...v,
-      scents: v.scents.includes(scent)
-        ? v.scents.filter((s) => s !== scent)
-        : [...v.scents, scent],
-    }));
+  const [scentDraft, setScentDraft] = useState("");
+
+  const addScent = () => {
+    const value = scentDraft.trim();
+    if (!value) return;
+    setValues((v) =>
+      v.scents.includes(value) ? v : { ...v, scents: [...v.scents, value] }
+    );
+    setScentDraft("");
+  };
+
+  const removeScent = (scent: string) =>
+    setValues((v) => ({ ...v, scents: v.scents.filter((s) => s !== scent) }));
 
   const uploadImage = async (file: File) => {
     setUploading(true);
@@ -80,7 +85,7 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
     const next: Record<string, string> = {};
     if (values.name.trim().length < 2) next.name = "Enter a product name";
     if (!values.category) next.category = "Pick a category";
-    if (values.scents.length === 0) next.scents = "Pick at least one scent";
+    if (values.scents.length === 0) next.scents = "Add at least one scent or variant";
     if (values.description.trim().length < 10) next.description = "Write a short description (10+ characters)";
     const price = Number(values.price);
     if (!price || price <= 0) next.price = "Enter a valid price";
@@ -101,6 +106,7 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
     const payload = {
       name: values.name.trim(),
       category: values.category,
+      size: values.size.trim(),
       scents: values.scents,
       description: values.description.trim(),
       ingredients: values.ingredients.trim(),
@@ -177,21 +183,58 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
               {errors.category && <p className="form-error">{errors.category}</p>}
             </div>
             <div>
-              <p className="mb-1.5 text-sm font-semibold">Scents</p>
-              <div className="flex flex-wrap gap-1.5">
-                {SCENTS.map((s) => (
-                  <button key={s} type="button" onClick={() => toggleScent(s)}
-                    className={`rounded-full border px-3 py-1 text-xs font-semibold transition-colors ${
-                      values.scents.includes(s)
-                        ? "border-moss bg-moss text-almond-light"
-                        : "border-sand bg-almond hover:border-moss"
-                    }`}>
+              <label className="mb-1.5 block text-sm font-semibold" htmlFor="p-size">
+                Pack size <span className="font-normal text-earth/70">(e.g. 200 ml)</span>
+              </label>
+              <input id="p-size" className="field" placeholder="100 gms"
+                value={values.size}
+                onChange={(e) => setValues((v) => ({ ...v, size: e.target.value }))} />
+            </div>
+          </div>
+
+          {/* Scents / variants — free-form, one per product */}
+          <div>
+            <label className="mb-1.5 block text-sm font-semibold" htmlFor="p-scent">
+              Scents / variants{" "}
+              <span className="font-normal text-earth/70">
+                — what the customer picks at checkout
+              </span>
+            </label>
+            <div className="flex gap-2">
+              <input
+                id="p-scent"
+                className={`field ${errors.scents ? "field-error" : ""}`}
+                placeholder="Type a scent and press Enter — e.g. Ocean Mist"
+                value={scentDraft}
+                onChange={(e) => setScentDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addScent();
+                  }
+                }}
+              />
+              <button type="button" onClick={addScent} className="btn btn-secondary shrink-0 px-5">
+                Add
+              </button>
+            </div>
+            {values.scents.length > 0 && (
+              <div className="mt-3 flex flex-wrap gap-1.5">
+                {values.scents.map((s) => (
+                  <span key={s}
+                    className="inline-flex items-center gap-1.5 rounded-full bg-moss px-3 py-1 text-xs font-semibold text-almond-light">
                     {s}
-                  </button>
+                    <button type="button" onClick={() => removeScent(s)} aria-label={`Remove ${s}`}
+                      className="transition-opacity hover:opacity-70">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <path d="M6 6 L18 18 M18 6 L6 18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+                      </svg>
+                    </button>
+                  </span>
                 ))}
               </div>
-              {errors.scents && <p className="form-error">{errors.scents}</p>}
-            </div>
+            )}
+            {errors.scents && <p className="form-error">{errors.scents}</p>}
           </div>
 
           <div>

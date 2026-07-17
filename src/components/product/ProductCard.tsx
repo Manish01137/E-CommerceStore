@@ -68,7 +68,10 @@ export default function ProductCard({ product }: { product: ProductDTO }) {
           </button>
         </div>
         <div className="p-4">
-          <p className="eyebrow text-[11px] text-moss-dark">{product.category}</p>
+          <p className="eyebrow text-[11px] text-moss-dark">
+            {product.category}
+            {product.size && <span className="text-earth/70"> · {product.size}</span>}
+          </p>
           <h3 className="mt-1 font-serif text-lg leading-snug">{product.name}</h3>
           <p className="mt-0.5 text-xs text-earth">
             {product.scents.length > 1

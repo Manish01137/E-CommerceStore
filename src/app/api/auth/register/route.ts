@@ -1,8 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import User from "@/models/User";
+import { prisma } from "@/lib/db";
 import { signSession, setSessionCookie } from "@/lib/auth";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
@@ -16,7 +15,7 @@ export async function POST(req: NextRequest) {
   if (!DB_ENABLED) {
     return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
   }
-  await dbConnect();
+
   const body = await req.json().catch(() => null);
   const parsed = registerSchema.safeParse(body);
   if (!parsed.success) {
@@ -26,8 +25,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { name, email, password } = parsed.data;
-  const existing = await User.findOne({ email });
+  const { name, password } = parsed.data;
+  const email = parsed.data.email.toLowerCase().trim();
+
+  const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     return NextResponse.json(
       { error: "An account with this email already exists" },
@@ -35,15 +36,17 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const user = await User.create({
-    name,
-    email,
-    passwordHash: await bcrypt.hash(password, 10),
-    role: "customer",
+  const user = await prisma.user.create({
+    data: {
+      name: name.trim(),
+      email,
+      passwordHash: await bcrypt.hash(password, 10),
+      role: "customer",
+    },
   });
 
   const token = await signSession({
-    userId: user._id.toString(),
+    userId: user.id,
     name: user.name,
     email: user.email,
     role: "customer",

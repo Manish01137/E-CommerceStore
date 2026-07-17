@@ -22,6 +22,7 @@ export default function Footer() {
           <p className="eyebrow mb-4 text-almond-light/70">Explore</p>
           <ul className="space-y-2.5 text-sm">
             <li><Link href="/products" className="transition-colors hover:text-sand-light">All Products</Link></li>
+            <li><Link href="/about" className="transition-colors hover:text-sand-light">About Us</Link></li>
             <li><Link href="/shop" className="transition-colors hover:text-sand-light">Shop</Link></li>
             <li><Link href="/business" className="transition-colors hover:text-sand-light">Wholesale &amp; Business</Link></li>
           </ul>

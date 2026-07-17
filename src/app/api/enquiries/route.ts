@@ -1,8 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import Enquiry from "@/models/Enquiry";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { toEnquiryDTO } from "@/lib/map";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 const enquirySchema = z.object({
@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
   if (!DB_ENABLED) {
     return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
   }
-  await dbConnect();
+
   const body = await req.json().catch(() => null);
   const parsed = enquirySchema.safeParse(body);
   if (!parsed.success) {
@@ -33,11 +33,10 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const enquiry = await Enquiry.create(parsed.data);
-  return NextResponse.json(
-    { ok: true, id: enquiry._id.toString() },
-    { status: 201 }
-  );
+  const enquiry = await prisma.enquiry.create({
+    data: { ...parsed.data, email: parsed.data.email.toLowerCase().trim() },
+  });
+  return NextResponse.json({ ok: true, id: enquiry.id }, { status: 201 });
 }
 
 export async function GET() {
@@ -48,7 +47,7 @@ export async function GET() {
   if (session?.role !== "admin") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  await dbConnect();
-  const enquiries = await Enquiry.find().sort({ createdAt: -1 }).lean();
-  return NextResponse.json({ enquiries });
+
+  const enquiries = await prisma.enquiry.findMany({ orderBy: { createdAt: "desc" } });
+  return NextResponse.json({ enquiries: enquiries.map(toEnquiryDTO) });
 }

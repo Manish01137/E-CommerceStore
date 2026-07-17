@@ -1,0 +1,190 @@
+// Ethereal Artisan — Postgres schema (Supabase).
+//
+// Connection URLs live in prisma.config.ts (Prisma 7 moved them out of here):
+//   DATABASE_URL → Supabase "Transaction pooler" (pgbouncer, port 6543), used
+//                  at runtime because serverless opens many short connections.
+//   DIRECT_URL   → Supabase "Direct connection" (port 5432), used by Prisma
+//                  Migrate, which needs a real session pgbouncer can't give.
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  customer
+  admin
+}
+
+enum OrderStatus {
+  placed
+  processing
+  shipped
+  delivered
+  cancelled
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum EnquiryStatus {
+  new
+  contacted
+  closed
+}
+
+model User {
+  id           String    @id @default(uuid()) @db.Uuid
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         Role      @default(customer)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  addresses Address[]
+  orders    Order[]
+
+  @@map("users")
+}
+
+model Address {
+  id       String @id @default(uuid()) @db.Uuid
+  userId   String @map("user_id") @db.Uuid
+  label    String @default("Home")
+  fullName String @map("full_name")
+  phone    String
+  line1    String
+  line2    String @default("")
+  city     String
+  state    String
+  pincode  String
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+model Product {
+  id             String   @id @default(uuid()) @db.Uuid
+  name           String
+  slug           String   @unique
+  category       String
+  /// Pack size, e.g. "200 ml" or "100 gms"
+  size           String   @default("")
+  /// Pickable variants — "Ocean Mist", "Neem Tulsi", …
+  scents         String[] @default([])
+  description    String
+  ingredients    String   @default("")
+  /// MRP in INR
+  price          Int
+  compareAtPrice Int?     @map("compare_at_price")
+  images         String[] @default([])
+  stock          Int      @default(0)
+  featured       Boolean  @default(false)
+  /// Popularity counter, incremented on paid orders
+  sold           Int      @default(0)
+  active         Boolean  @default(true)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  orderItems OrderItem[]
+
+  @@index([category])
+  @@index([active, featured])
+  @@map("products")
+}
+
+model Order {
+  id          String @id @default(uuid()) @db.Uuid
+  orderNumber String @unique @map("order_number")
+  userId      String @map("user_id") @db.Uuid
+
+  subtotal    Int
+  shippingFee Int @default(0) @map("shipping_fee")
+  total       Int
+
+  // Shipping address is snapshotted onto the order: it must not change if the
+  // customer later edits or deletes the saved address it came from.
+  shipFullName String @map("ship_full_name")
+  shipPhone    String @map("ship_phone")
+  shipEmail    String @map("ship_email")
+  shipLine1    String @map("ship_line1")
+  shipLine2    String @default("") @map("ship_line2")
+  shipCity     String @map("ship_city")
+  shipState    String @map("ship_state")
+  shipPincode  String @map("ship_pincode")
+
+  status        OrderStatus   @default(placed)
+  paymentStatus PaymentStatus @default(pending) @map("payment_status")
+  paymentMethod String        @default("razorpay") @map("payment_method")
+
+  razorpayOrderId   String @default("") @map("razorpay_order_id")
+  razorpayPaymentId String @default("") @map("razorpay_payment_id")
+
+  shiprocketOrderId    String @default("") @map("shiprocket_order_id")
+  shiprocketShipmentId String @default("") @map("shiprocket_shipment_id")
+  shiprocketAwbCode    String @default("") @map("shiprocket_awb_code")
+  shiprocketCourier    String @default("") @map("shiprocket_courier")
+  shiprocketTrackingUrl String @default("") @map("shiprocket_tracking_url")
+  shiprocketStatus     String @default("") @map("shiprocket_status")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User        @relation(fields: [userId], references: [id])
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String @id @default(uuid()) @db.Uuid
+  orderId   String @map("order_id") @db.Uuid
+  productId String @map("product_id") @db.Uuid
+
+  // Name/price/image are snapshotted so past orders stay accurate even after
+  // the product is renamed, repriced or deleted.
+  name     String
+  scent    String @default("")
+  price    Int
+  quantity Int
+  image    String @default("")
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@map("order_items")
+}
+
+model Enquiry {
+  id       String        @id @default(uuid()) @db.Uuid
+  name     String
+  company  String
+  email    String
+  phone    String        @default("")
+  quantity String
+  message  String
+  status   EnquiryStatus @default(new)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([status])
+  @@map("enquiries")
+}

@@ -1,9 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { dbConnect } from "@/lib/db";
-import Product from "@/models/Product";
-import Order from "@/models/Order";
+import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
+import { toOrderDTO } from "@/lib/map";
 import { isRazorpayConfigured, createRazorpayOrder } from "@/lib/razorpay";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
@@ -35,7 +34,7 @@ const orderSchema = z.object({
 function generateOrderNumber(): string {
   const stamp = Date.now().toString(36).toUpperCase();
   const rand = Math.random().toString(36).slice(2, 5).toUpperCase();
-  return `TB-${stamp}${rand}`;
+  return `EA-${stamp}${rand}`;
 }
 
 export async function POST(req: NextRequest) {
@@ -47,7 +46,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Please sign in to place an order" }, { status: 401 });
   }
 
-  await dbConnect();
   const body = await req.json().catch(() => null);
   const parsed = orderSchema.safeParse(body);
   if (!parsed.success) {
@@ -60,11 +58,10 @@ export async function POST(req: NextRequest) {
   const { items, address } = parsed.data;
 
   // Recompute everything server-side — never trust client prices.
-  const products = await Product.find({
-    _id: { $in: items.map((i) => i.productId) },
-    active: true,
+  const products = await prisma.product.findMany({
+    where: { id: { in: items.map((i) => i.productId) }, active: true },
   });
-  const byId = new Map(products.map((p) => [p._id.toString(), p]));
+  const byId = new Map(products.map((p) => [p.id, p]));
 
   const orderItems = [];
   for (const item of items) {
@@ -82,7 +79,7 @@ export async function POST(req: NextRequest) {
       );
     }
     orderItems.push({
-      product: product._id,
+      productId: product.id,
       name: product.name,
       scent: item.scent,
       price: product.price,
@@ -95,25 +92,36 @@ export async function POST(req: NextRequest) {
   const shippingFee = subtotal >= FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
   const total = subtotal + shippingFee;
 
-  const order = await Order.create({
-    orderNumber: generateOrderNumber(),
-    user: session.userId,
-    items: orderItems,
-    subtotal,
-    shippingFee,
-    total,
-    shippingAddress: address,
-    status: "placed",
-    paymentStatus: "pending",
-    paymentMethod: isRazorpayConfigured() ? "razorpay" : "mock",
+  const order = await prisma.order.create({
+    data: {
+      orderNumber: generateOrderNumber(),
+      userId: session.userId,
+      subtotal,
+      shippingFee,
+      total,
+      shipFullName: address.fullName,
+      shipPhone: address.phone,
+      shipEmail: address.email,
+      shipLine1: address.line1,
+      shipLine2: address.line2,
+      shipCity: address.city,
+      shipState: address.state,
+      shipPincode: address.pincode,
+      status: "placed",
+      paymentStatus: "pending",
+      paymentMethod: isRazorpayConfigured() ? "razorpay" : "mock",
+      items: { create: orderItems },
+    },
   });
 
   if (isRazorpayConfigured()) {
     const rzpOrder = await createRazorpayOrder(total, order.orderNumber);
-    order.razorpayOrderId = rzpOrder.id;
-    await order.save();
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { razorpayOrderId: rzpOrder.id },
+    });
     return NextResponse.json({
-      orderId: order._id.toString(),
+      orderId: order.id,
       orderNumber: order.orderNumber,
       total,
       payment: {
@@ -128,7 +136,7 @@ export async function POST(req: NextRequest) {
 
   // No gateway keys configured — dev/test mock flow
   return NextResponse.json({
-    orderId: order._id.toString(),
+    orderId: order.id,
     orderNumber: order.orderNumber,
     total,
     payment: { provider: "mock" },
@@ -143,9 +151,11 @@ export async function GET() {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  await dbConnect();
-  const orders = await Order.find({ user: session.userId })
-    .sort({ createdAt: -1 })
-    .lean();
-  return NextResponse.json({ orders });
+
+  const orders = await prisma.order.findMany({
+    where: { userId: session.userId },
+    include: { items: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return NextResponse.json({ orders: orders.map(toOrderDTO) });
 }

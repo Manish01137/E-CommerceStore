@@ -1,36 +1,60 @@
-import Product from "@/models/Product";
-import Order, { type OrderDoc } from "@/models/Order";
+import { prisma } from "@/lib/db";
 import { createShipment } from "@/lib/shiprocket";
-import type mongoose from "mongoose";
-
-type OrderInstance = mongoose.HydratedDocument<OrderDoc>;
 
 /**
- * Runs after a successful payment: marks the order paid, adjusts stock
- * and popularity counters, and creates the Shiprocket shipment.
+ * Runs after a successful payment: marks the order paid, adjusts stock and
+ * popularity counters, then creates the Shiprocket shipment.
+ *
+ * The paid-marking and stock moves run in one transaction so a crash can't
+ * leave an order paid with stock un-decremented (or vice versa). Shipment
+ * creation is deliberately outside it — a courier API hiccup must not roll
+ * back a payment we've already taken.
  */
-export async function fulfilPaidOrder(order: OrderInstance): Promise<void> {
-  order.paymentStatus = "paid";
-  order.status = "processing";
+export async function fulfilPaidOrder(orderId: string): Promise<void> {
+  const order = await prisma.$transaction(async (tx) => {
+    const o = await tx.order.findUnique({
+      where: { id: orderId },
+      include: { items: true },
+    });
+    if (!o) throw new Error(`Order ${orderId} not found`);
 
-  await Promise.all(
-    order.items.map((item) =>
-      Product.updateOne(
-        { _id: item.product },
-        { $inc: { stock: -item.quantity, sold: item.quantity } }
-      )
-    )
-  );
+    for (const item of o.items) {
+      await tx.product.update({
+        where: { id: item.productId },
+        data: {
+          stock: { decrement: item.quantity },
+          sold: { increment: item.quantity },
+        },
+      });
+    }
+
+    return tx.order.update({
+      where: { id: orderId },
+      data: { paymentStatus: "paid", status: "processing" },
+      include: { items: true },
+    });
+  });
 
   const shipment = await createShipment(order);
   if (shipment) {
-    order.shiprocket = shipment;
-    order.status = "shipped";
+    await prisma.order.update({
+      where: { id: orderId },
+      data: {
+        shiprocketOrderId: shipment.orderId,
+        shiprocketShipmentId: shipment.shipmentId,
+        shiprocketAwbCode: shipment.awbCode,
+        shiprocketCourier: shipment.courier,
+        shiprocketTrackingUrl: shipment.trackingUrl,
+        shiprocketStatus: shipment.status,
+        status: "shipped",
+      },
+    });
   }
-
-  await order.save();
 }
 
 export async function markPaymentFailed(orderId: string): Promise<void> {
-  await Order.updateOne({ _id: orderId }, { paymentStatus: "failed" });
+  await prisma.order.update({
+    where: { id: orderId },
+    data: { paymentStatus: "failed" },
+  });
 }

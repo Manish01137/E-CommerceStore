@@ -42,3 +42,6 @@ next-env.d.ts
 
 # runtime image uploads
 public/uploads/
+
+# Prisma generated client (rebuilt by 'prisma generate' on install/build)
+/src/generated/
