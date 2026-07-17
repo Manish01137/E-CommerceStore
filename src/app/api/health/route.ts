@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { DB_ENABLED } from "@/lib/demo";
+import { databaseUrl } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
@@ -25,7 +26,7 @@ export async function GET() {
 
   const host = (() => {
     try {
-      return new URL(process.env.DATABASE_URL!).hostname;
+      return new URL(databaseUrl()!).hostname;
     } catch {
       return "UNPARSEABLE DATABASE_URL";
     }

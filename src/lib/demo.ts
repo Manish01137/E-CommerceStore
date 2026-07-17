@@ -10,7 +10,9 @@
  *
  * Set DATABASE_URL (Supabase Postgres) to turn the full backend on.
  */
-export const DB_ENABLED = Boolean(process.env.DATABASE_URL);
+import { databaseUrl } from "@/lib/env";
+
+export const DB_ENABLED = Boolean(databaseUrl());
 
 export const DEMO_MESSAGE =
   "This is a preview deployment running without a database, so this feature is disabled. Connect a database to enable accounts, orders and the admin panel.";
