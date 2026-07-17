@@ -79,7 +79,9 @@ await page.getByRole("button", { name: /^Pay/ }).click();
 await page.getByRole("button", { name: "Simulate successful payment" }).click({ timeout: 10000 });
 await page.waitForURL("**/account/orders/**", { timeout: 15000 });
 console.log("order confirmation url:", new URL(page.url()).pathname + new URL(page.url()).search);
-await page.waitForTimeout(1200);
+// Wait for the order to actually load rather than guessing — a remote database
+// (Supabase) has real latency, so a fixed timeout is flaky.
+await page.getByText(/your order is confirmed/i).waitFor({ timeout: 20000 });
 const confText = await page.textContent("body");
 console.log("confirmation banner:", confText.includes("your order is confirmed"));
 console.log("order number shown:", /EA-[A-Z0-9]+/.test(confText));
