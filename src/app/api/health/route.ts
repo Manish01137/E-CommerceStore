@@ -32,6 +32,24 @@ export async function GET() {
     }
   })();
 
+  /**
+   * When the URL won't parse, describe its SHAPE without leaking a single
+   * character of the secret — enough to tell a truncated paste from quotes
+   * from a key=value paste from placeholder text.
+   */
+  const raw = process.env.DATABASE_URL ?? "";
+  const shape = {
+    length: raw.length,
+    startsWithPostgres: /^["'\s]*postgres(ql)?:\/\//.test(raw),
+    containsNewline: /[\r\n]/.test(raw),
+    containsSpace: / /.test(raw),
+    containsQuote: /["']/.test(raw),
+    containsKeyEquals: /^[A-Z_]+=/.test(raw.trim()),
+    atSigns: (raw.match(/@/g) ?? []).length,
+    containsPlaceholder: /\[|\]|PASSWORD|<|>/.test(raw),
+    endsWithPgbouncer: /pgbouncer=true["'\s]*$/.test(raw),
+  };
+
   try {
     const { prisma } = await import("@/lib/db");
     const started = Date.now();
@@ -40,6 +58,7 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       mode: "database",
+      commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "local",
       host,
       latencyMs: Date.now() - started,
       products,
@@ -50,7 +69,9 @@ export async function GET() {
       {
         ok: false,
         mode: "database",
+        commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "local",
         host,
+        urlShape: shape,
         errorName: e.name,
         errorCode: e.code ?? null,
         error: redact(e.message ?? String(err)),
