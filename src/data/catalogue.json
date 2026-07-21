@@ -74,8 +74,7 @@
     "featured": false,
     "sold": 196,
     "images": [
-      "/products/botanical-soap.jpg",
-      "/products/botanical-soap-2.jpg"
+      "/products/ph-botanical-soap.svg"
     ],
     "description": "Our apothecary range \u2014 single-botanical bars built around one hard-working ingredient each. Kasturi manjal and papaya to brighten, neem to calm breakouts, multani mitti to lift oil, sandalwood and aloe to soothe. Pick the one your skin is asking for.",
     "ingredients": "Saponified coconut & olive oils, glycerin, and the named botanical \u2014 papaya & wild turmeric, rose & lavender, aloe vera, sandalwood, activated charcoal, neem, or fuller's earth.",
@@ -124,7 +123,7 @@
     "sold": 168,
     "images": [
       "/products/clay-soap-green-french.jpg",
-      "/products/clay-soap-bars.jpg"
+      "/products/ph-clay-soap.svg"
     ],
     "description": "Mineral clays draw oil and city grime out of congested skin without the tightness that comes from harsh surfactants. Green French clay for oily and acne-prone skin, pink rose clay for normal, kaolin for sensitive.",
     "ingredients": "Saponified coconut & olive oils, glycerin, French green clay, pink rose clay or kaolin clay, essential oils.",
@@ -147,8 +146,7 @@
     "featured": false,
     "sold": 132,
     "images": [
-      "/products/signature-soap.jpg",
-      "/products/signature-soap-2.jpg"
+      "/products/ph-signature-soap.svg"
     ],
     "description": "The two bars we make with our most precious ingredients. Mysore sandalwood ground with cinnamon for a warm, gently exfoliating bar; and goat milk with real saffron strands folded through \u2014 the one we make for gifting.",
     "ingredients": "Saponified coconut & olive oils, glycerin, sandalwood powder & cinnamon, or goat milk & saffron strands, vitamin E.",
@@ -264,8 +262,7 @@
     "featured": true,
     "sold": 204,
     "images": [
-      "/products/body-lotion-whipped.jpg",
-      "/products/body-lotion-swirl.jpg"
+      "/products/ph-body-lotion-250.svg"
     ],
     "description": "A daily lotion with enough butter in it to actually last the day, but light enough to dress over five minutes later. Our full 250g jar \u2014 the one that lives by the bed rather than in the travel bag.",
     "ingredients": "Aqua, shea & kokum butters, cold-pressed sweet almond oil, glycerin, aloe vera, natural fragrance of the chosen variant, vitamin E. 250 gms.",
@@ -290,8 +287,7 @@
     "featured": false,
     "sold": 158,
     "images": [
-      "/products/body-lotion-swirl.jpg",
-      "/products/body-lotion-whipped.jpg"
+      "/products/ph-body-lotion-100.svg"
     ],
     "description": "The same whipped butter-and-almond-oil lotion in a 100g jar \u2014 the right size to try a new scent, keep in a handbag, or gift alongside a bar of soap.",
     "ingredients": "Aqua, shea & kokum butters, cold-pressed sweet almond oil, glycerin, aloe vera, natural fragrance of the chosen variant, vitamin E. 100 gms.",
@@ -313,7 +309,7 @@
     "featured": false,
     "sold": 121,
     "images": [
-      "/products/body-scrub-rose-crystals.jpg"
+      "/products/ph-body-scrub-dark-rose.svg"
     ],
     "description": "Fine sugar and crushed dark rose petals in a nourishing oil base. It polishes away rough patches on knees, elbows and shoulders and leaves behind enough oil that you can skip lotion afterwards. Deeply, unapologetically rose.",
     "ingredients": "Cane sugar, dried dark rose petals, cold-pressed coconut & sweet almond oils, rose absolute, vitamin E. 100 gms.",
@@ -371,7 +367,7 @@
     "featured": true,
     "sold": 186,
     "images": [
-      "/products/face-cream-smear.jpg"
+      "/products/ph-face-cream-100.svg"
     ],
     "description": "A light, breathable face cream that sits well under makeup and doesn't leave a film. Lavender to calm, jasmine for evenings, and Divine Floral \u2014 our house blend, and the one people come back for.",
     "ingredients": "Aqua, aloe vera, shea butter, jojoba oil, glycerin, hyaluronic acid, floral extract of the chosen variant, vitamin E. 100 gms.",
@@ -395,7 +391,7 @@
     "featured": false,
     "sold": 143,
     "images": [
-      "/products/face-cream-smear.jpg"
+      "/products/ph-face-cream-50.svg"
     ],
     "description": "The same cream in a 50g jar \u2014 a sensible way to find your scent before committing to the full size, and small enough for cabin baggage.",
     "ingredients": "Aqua, aloe vera, shea butter, jojoba oil, glycerin, hyaluronic acid, floral extract of the chosen variant, vitamin E. 50 gms.",
@@ -440,7 +436,7 @@
     "featured": false,
     "sold": 149,
     "images": [
-      "/products/shampoo-lather.jpg"
+      "/products/ph-shampoo.svg"
     ],
     "description": "Sulphate-free shampoo that actually lathers. Lavender to calm an itchy scalp, rosemary to support growth and shine. Safe on coloured and chemically treated hair, and gentle enough for everyday washing.",
     "ingredients": "Aqua, mild plant-derived (sulphate-free) surfactants, aloe vera, glycerin, lavender or rosemary essential oil, panthenol, vitamin E. 200 ml.",
@@ -463,7 +459,7 @@
     "featured": false,
     "sold": 138,
     "images": [
-      "/products/conditioner-amber.jpg"
+      "/products/ph-conditioner.svg"
     ],
     "description": "A silicone-free conditioner \u2014 it detangles and softens without coating the hair in something you then need a harsh shampoo to strip off. Pair it with the matching shampoo.",
     "ingredients": "Aqua, cetearyl alcohol (plant-derived), shea butter, jojoba oil, glycerin, lavender or rosemary essential oil, vitamin E. Silicone-free. 200 ml.",
