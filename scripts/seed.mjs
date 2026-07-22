@@ -58,12 +58,12 @@ async function seed() {
     const bySlug = async (slug) =>
       (await prisma.product.findUnique({ where: { slug } }))?.id;
     const samples = [
-      ["goat-milk-soap", "Aditi Sharma", 5, "Softest my hands have felt", "The honey one is my favourite — creamy lather and my skin doesn't feel tight afterwards. Ordered twice already."],
-      ["body-wash", "Rohan Iyer", 5, "Ocean Mist is addictive", "Sulphate-free but still foams properly. The scent is fresh without being perfumey. Whole family uses it now."],
-      ["face-wash", "Meghna Pillai", 4, "Neem tulsi calmed my skin", "Breakouts reduced noticeably in two weeks. It doesn't dry me out like my old face wash did."],
-      ["flower-soap", "Kavya Nair", 5, "Too pretty to use (I used it)", "Bought as a gift, kept it myself. The rose petals inside are real and it smells like a garden."],
+      ["goat-milk-honey-soap", "Aditi Sharma", 5, "Softest my hands have felt", "Creamy lather and my skin doesn't feel tight afterwards. Ordered twice already."],
+      ["ocean-mist-body-wash", "Rohan Iyer", 5, "Ocean Mist is addictive", "Sulphate-free but still foams properly. The scent is fresh without being perfumey. Whole family uses it now."],
+      ["neem-tulsi-face-wash", "Meghna Pillai", 4, "Calmed my skin", "Breakouts reduced noticeably in two weeks. It doesn't dry me out like my old face wash did."],
+      ["pink-rose-flower-soap", "Kavya Nair", 5, "Too pretty to use (I used it)", "Bought as a gift, kept it myself. It smells like a garden and lathers beautifully."],
       ["ubtan-face-pack", "Sneha Kulkarni", 5, "Just like my nani made", "Mixed with rose water, fifteen minutes, and my face genuinely glows. Powder form means it lasts."],
-      ["bath-salt", "Arjun Mehta", 4, "Sunday evening ritual", "The lavender salt turns an ordinary bath into something worth planning the day around."],
+      ["lavender-bath-salt", "Arjun Mehta", 4, "Sunday evening ritual", "The lavender salt turns an ordinary bath into something worth planning the day around."],
     ];
     let created = 0;
     for (const [slug, authorName, rating, title, comment] of samples) {

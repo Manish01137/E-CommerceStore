@@ -90,18 +90,43 @@ function render(name, category) {
 </svg>`;
 }
 
-// Products awaiting real photography
+// Individual products still awaiting real photography. Each card shows the
+// scent big and the category/size small — replace by uploading a real photo.
 const pending = [
-  ["botanical-soap", "Botanical Soap", "Soap"],
-  ["signature-soap", "Signature Soap", "Soap"],
-  ["clay-soap", "Clay Soap", "Soap"],
-  ["body-lotion-250", "Body Lotion", "Body Lotion"],
-  ["body-lotion-100", "Body Lotion", "Body Lotion"],
-  ["body-scrub-dark-rose", "Dark Rose Body Scrub", "Body Scrub"],
-  ["face-cream-100", "Face Cream", "Face Cream"],
-  ["face-cream-50", "Face Cream", "Face Cream"],
-  ["shampoo", "Shampoo", "Shampoo"],
-  ["conditioner", "Conditioner", "Conditioner"],
+  // Shea butter soap
+  ["shea-butter-rose", "Rose", "Shea Butter Soap"],
+  // Goat milk soap
+  ["goat-milk-lavender", "Lavender", "Goat Milk Soap"],
+  // Botanical soaps
+  ["botanical-papaya", "Papaya Kasturi Manjal", "Botanical Soap"],
+  ["botanical-rose-lavender", "Rose Lavender", "Botanical Soap"],
+  ["botanical-sandalwood", "Sandalwood", "Botanical Soap"],
+  ["botanical-neem", "Neem", "Botanical Soap"],
+  ["botanical-multani", "Multani Mitti", "Botanical Soap"],
+  // Scrub / signature / flower soaps
+  ["scrub-ubtan", "Ubtan", "Scrub Soap"],
+  ["signature-sandalwood-cinnamon", "Sandalwood Cinnamon", "Signature Soap"],
+  ["flower-assorted", "Assorted Flowers", "Flower Soap"],
+  // Body wash
+  ["bw-soft-lavender", "Soft Lavender", "Body Wash · 200 ml"],
+  ["bw-divine-lotus", "Divine Lotus", "Body Wash · 200 ml"],
+  ["bw-flower-bouquet", "Flower Bouquet", "Body Wash · 200 ml"],
+  ["bw-royal-rose", "Royal Rose", "Body Wash · 200 ml"],
+  ["bw-lush-lavender", "Lush Lavender", "Body Wash · 200 ml"],
+  ["bw-citrus-lemon", "Citrus Lemon", "Body Wash · 200 ml"],
+  ["bw-green-apple", "Green Apple", "Body Wash · 200 ml"],
+  // Body lotion 250 g
+  ["bl250-vanilla", "Vanilla", "Body Lotion · 250 g"],
+  ["bl250-orange", "Orange", "Body Lotion · 250 g"],
+  ["bl250-lavender", "Lavender", "Body Lotion · 250 g"],
+  ["bl250-cherry-blossom", "Cherry Blossom", "Body Lotion · 250 g"],
+  // Body lotion 100 g
+  ["bl100-vanilla", "Vanilla", "Body Lotion · 100 g"],
+  ["bl100-orange", "Orange", "Body Lotion · 100 g"],
+  ["bl100-lavender", "Lavender", "Body Lotion · 100 g"],
+  ["bl100-cherry-blossom", "Cherry Blossom", "Body Lotion · 100 g"],
+  // Body scrub
+  ["body-scrub-dark-rose", "Dark Rose", "Body Scrub · 100 g"],
 ];
 
 for (const [slug, name, category] of pending) {

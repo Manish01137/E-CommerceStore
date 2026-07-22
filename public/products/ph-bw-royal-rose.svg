@@ -44,10 +44,10 @@
   <rect x="70" y="70" width="660" height="860" rx="26" fill="none" stroke="#c7af94" stroke-width="2"/>
   <text x="400" y="300" text-anchor="middle" fill="#8c916c"
     font-family="Helvetica, Arial, sans-serif" font-size="22" letter-spacing="6"
-    font-weight="600">BODY SCRUB · 100 G</text>
+    font-weight="600">BODY WASH · 200 ML</text>
   <line x1="330" y1="330" x2="470" y2="330" stroke="#c7af94" stroke-width="2"/>
   <text x="400" y="470" text-anchor="middle" fill="#5f4732"
-           font-family="Georgia, 'Times New Roman', serif" font-size="54">Dark Rose</text>
+           font-family="Georgia, 'Times New Roman', serif" font-size="54">Royal Rose</text>
   <text x="400" y="690" text-anchor="middle" fill="#95714f"
     font-family="Georgia, serif" font-style="italic" font-size="26"
     opacity="0.85">Ethereal Artisan</text>

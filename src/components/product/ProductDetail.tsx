@@ -137,8 +137,9 @@ export default function ProductDetail({ product }: { product: ProductDTO }) {
           </details>
         )}
 
-        {/* Scent picker */}
-        {product.scents.length > 0 && (
+        {/* Scent picker — only for products that genuinely offer a choice.
+            Single-variant products already are that scent, so no picker. */}
+        {product.scents.length > 1 && (
           <div className="mt-8">
             <p className="mb-3 text-sm font-semibold">
               Scent{product.scents.length > 1 && <span className="text-earth/60"> — choose one</span>}
