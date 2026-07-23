@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -35,8 +36,14 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         }`}
       >
         <div className="border-b border-almond-light/10 px-6 py-5">
-          <p className="font-serif text-xl">Ethereal Artisan</p>
-          <p className="eyebrow mt-0.5 text-almond-light/60">Admin Panel</p>
+          <Image
+            src="/brand/logo-compact.png"
+            alt="Ethereal Artisan"
+            width={277}
+            height={87}
+            className="h-10 w-auto"
+          />
+          <p className="eyebrow mt-2 text-almond-light/60">Admin Panel</p>
         </div>
         <nav className="flex-1 space-y-1 px-3 py-5">
           {NAV.map((item) => {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/Toast";
@@ -72,7 +73,14 @@ export default function AuthForm({ mode }: { mode: "login" | "register" }) {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="card p-8"
       >
-        <p className="eyebrow text-moss-dark">{isLogin ? "Welcome back" : "Join us"}</p>
+        <Image
+          src="/brand/logo-compact.png"
+          alt="Ethereal Artisan"
+          width={277}
+          height={87}
+          className="h-10 w-auto"
+        />
+        <p className="eyebrow mt-4 text-moss-dark">{isLogin ? "Welcome back" : "Join us"}</p>
         <h1 className="mt-2 font-serif text-3xl">
           {isLogin ? "Sign in to your account" : "Create your account"}
         </h1>

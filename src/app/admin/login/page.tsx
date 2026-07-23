@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, Suspense } from "react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 
@@ -59,8 +60,14 @@ function AdminLoginForm() {
         transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-sm rounded-2xl bg-almond-light p-8 shadow-drawer"
       >
-        <p className="font-serif text-2xl">Ethereal Artisan</p>
-        <p className="eyebrow mt-1 text-moss-dark">Admin Panel</p>
+        <Image
+          src="/brand/logo-compact.png"
+          alt="Ethereal Artisan"
+          width={277}
+          height={87}
+          className="h-11 w-auto"
+        />
+        <p className="eyebrow mt-2 text-moss-dark">Admin Panel</p>
 
         <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-5">
           <div>

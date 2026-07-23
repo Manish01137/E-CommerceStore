@@ -4,7 +4,6 @@ import { getFeatured } from "@/lib/products";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import HomeReviews from "@/components/home/HomeReviews";
-import RotatingHero from "@/components/home/RotatingHero";
 
 export const dynamic = "force-dynamic";
 
@@ -36,9 +35,19 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero banner — rotating real product photography ──── */}
+      {/* ── Hero banner — single premium soap photograph ─────── */}
       <section className="relative isolate overflow-hidden">
-        <RotatingHero />
+        <div className="absolute inset-0 -z-10">
+          <Image
+            src="/products/goat-milk-saffron-soap.jpg"
+            alt="Ethereal Artisan Goat Milk Saffron soap bars, hand-poured with real saffron strands"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-earth-deep/90 via-earth-deep/65 to-earth-deep/30" />
+        </div>
 
         <div className="mx-auto flex min-h-[34rem] max-w-7xl items-center px-5 py-24 lg:min-h-[42rem] lg:px-8">
           <div className="max-w-2xl">

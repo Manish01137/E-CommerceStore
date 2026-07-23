@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -36,14 +37,15 @@ export default function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-moss-deep/40 bg-moss/95 text-almond-light shadow-[0_2px_12px_rgba(88,92,66,0.18)] backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-3.5 lg:px-8">
-        <Link href="/" className="group flex items-center gap-2.5" aria-label="Ethereal Artisan home">
-          <svg width="30" height="30" viewBox="0 0 30 30" fill="none" aria-hidden
-            className="transition-transform duration-300 group-hover:rotate-12">
-            <circle cx="15" cy="15" r="14" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M15 23 C 15 15 15 12 15 7 M15 12 Q 20 10 22 6 M15 16 Q 10 14 8 10"
-              stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-          </svg>
-          <span className="font-serif text-xl tracking-wide">Ethereal Artisan</span>
+        <Link href="/" className="shrink-0 transition-opacity duration-200 hover:opacity-85" aria-label="Ethereal Artisan home">
+          <Image
+            src="/brand/logo-compact.png"
+            alt="Ethereal Artisan"
+            width={277}
+            height={87}
+            priority
+            className="h-9 w-auto lg:h-10"
+          />
         </Link>
 
         {/* Connected tab group — one continuous pill, sliding active indicator */}

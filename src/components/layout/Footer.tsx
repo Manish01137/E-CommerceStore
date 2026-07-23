@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 export default function Footer() {
@@ -11,8 +12,14 @@ export default function Footer() {
     <footer className="bg-earth text-almond-light">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
-          <p className="font-serif text-2xl">Ethereal Artisan</p>
-          <p className="mt-3 max-w-xs text-sm leading-relaxed text-almond-light/80">
+          <Image
+            src="/brand/logo-compact.png"
+            alt="Ethereal Artisan"
+            width={277}
+            height={87}
+            className="h-11 w-auto"
+          />
+          <p className="mt-4 max-w-xs text-sm leading-relaxed text-almond-light/80">
             Small-batch bath &amp; body care, crafted from botanicals grown with
             patience and pressed with care.
           </p>
