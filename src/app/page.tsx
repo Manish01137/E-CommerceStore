@@ -4,6 +4,7 @@ import { getFeatured } from "@/lib/products";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import HomeReviews from "@/components/home/HomeReviews";
+import RotatingHero from "@/components/home/RotatingHero";
 
 export const dynamic = "force-dynamic";
 
@@ -35,19 +36,9 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero banner ──────────────────────────────────────── */}
+      {/* ── Hero banner — rotating real product photography ──── */}
       <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <Image
-            src="/banners/banner-hero.jpg"
-            alt="Hand-cut artisan soaps wrapped in paper, resting beside dried lavender"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-earth-deep/85 via-earth-deep/60 to-earth-deep/25" />
-        </div>
+        <RotatingHero />
 
         <div className="mx-auto flex min-h-[34rem] max-w-7xl items-center px-5 py-24 lg:min-h-[42rem] lg:px-8">
           <div className="max-w-2xl">
@@ -90,8 +81,8 @@ export default async function HomePage() {
           <Reveal>
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-sand shadow-card">
               <Image
-                src="/banners/banner-story.jpg"
-                alt="A row of hand-cut soap bars on soft linen"
+                src="/products/face-pack-ubtan.jpg"
+                alt="Ethereal Artisan Ubtan face pack with raw turmeric, gram flour and rose petals"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -171,8 +162,8 @@ export default async function HomePage() {
               <article className="card flex h-full flex-col overflow-hidden">
                 <div className="relative aspect-[5/3] w-full">
                   <Image
-                    src="/banners/banner-hands.jpg"
-                    alt="Hands holding freshly cut bars of handmade soap"
+                    src="/products/goat-milk-saffron-soap.jpg"
+                    alt="Ethereal Artisan Goat Milk Saffron soap bars, hand-poured and finished with real saffron"
                     fill
                     sizes="(max-width: 1024px) 100vw, 33vw"
                     className="object-cover"
@@ -193,8 +184,8 @@ export default async function HomePage() {
               <article className="card flex h-full flex-col overflow-hidden">
                 <div className="relative aspect-[5/3] w-full">
                   <Image
-                    src="/banners/banner-mission.jpg"
-                    alt="Two bars of natural soap, one tied with garden twine"
+                    src="/products/face-wash-neem-tulsi.jpg"
+                    alt="Ethereal Artisan Neem Tulsi face wash, SLS- and paraben-free, among fresh leaves"
                     fill
                     sizes="(max-width: 1024px) 100vw, 33vw"
                     className="object-cover"
@@ -216,8 +207,8 @@ export default async function HomePage() {
               <article className="card flex h-full flex-col overflow-hidden">
                 <div className="relative aspect-[5/3] w-full">
                   <Image
-                    src="/banners/banner-stack.jpg"
-                    alt="A stack of naturally coloured handmade soap bars"
+                    src="/products/flower-soap-pink-rose-new.jpg"
+                    alt="Ethereal Artisan Pink Rose flower soap, hand-shaped and gift-ready"
                     fill
                     sizes="(max-width: 1024px) 100vw, 33vw"
                     className="object-cover"
