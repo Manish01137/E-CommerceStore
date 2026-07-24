@@ -28,12 +28,23 @@ export function verifyPaymentSignature(params: {
   razorpayPaymentId: string;
   signature: string;
 }): boolean {
+  if (!params.razorpayOrderId || !params.razorpayPaymentId || !params.signature) {
+    return false;
+  }
+  const secret = process.env.RAZORPAY_KEY_SECRET;
+  if (!secret) return false;
+
   const expected = crypto
-    .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET!)
+    .createHmac("sha256", secret)
     .update(`${params.razorpayOrderId}|${params.razorpayPaymentId}`)
     .digest("hex");
-  return crypto.timingSafeEqual(
-    Buffer.from(expected),
-    Buffer.from(params.signature)
-  );
+
+  const expectedBuf = Buffer.from(expected);
+  const sigBuf = Buffer.from(params.signature);
+
+  if (expectedBuf.length !== sigBuf.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(expectedBuf, sigBuf);
 }

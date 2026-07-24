@@ -138,8 +138,13 @@ export default function CheckoutClient() {
         },
         modal: { ondismiss: () => setPlacing(false) },
       });
-      rzp.on("payment.failed", () => {
-        toast("Payment failed — please try again", "error");
+      rzp.on("payment.failed", (response: { error?: { description?: string; reason?: string; code?: string } }) => {
+        const errorMsg =
+          response?.error?.description ||
+          response?.error?.reason ||
+          "Payment failed — please try again";
+        console.error("Razorpay Payment Failed:", response?.error);
+        toast(`Payment Failed: ${errorMsg}`, "error");
         setPlacing(false);
       });
       rzp.open();
