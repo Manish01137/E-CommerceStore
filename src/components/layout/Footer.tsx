@@ -49,7 +49,8 @@ export default function Footer() {
           <ul className="space-y-2.5 text-sm text-almond-light/85">
             <li>hello@etherealartisan.in</li>
             <li>+91 98765 43210</li>
-            <li>Jaipur, Rajasthan, India</li>
+            <li>203 Radhika Residency, Near Uma Amar Party Plot</li>
+            <li>Gorwa Bridge Road, Vadodara, Gujarat 390024</li>
           </ul>
         </div>
       </div>

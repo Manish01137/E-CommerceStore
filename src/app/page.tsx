@@ -4,6 +4,7 @@ import { getFeatured } from "@/lib/products";
 import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 import ProductCard from "@/components/product/ProductCard";
 import HomeReviews from "@/components/home/HomeReviews";
+import HeroSlideshow from "@/components/home/HeroSlideshow";
 
 export const dynamic = "force-dynamic";
 
@@ -35,19 +36,9 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Hero banner — single premium soap photograph ─────── */}
+      {/* ── Hero banner — crossfading product photography ─────── */}
       <section className="relative isolate overflow-hidden">
-        <div className="absolute inset-0 -z-10">
-          <Image
-            src="/products/goat-milk-honey-soap-new.jpg"
-            alt="Ethereal Artisan Honey & Goat Milk soap bar, hand-poured with organic honey and cold-pressed oils"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-earth-deep/90 via-earth-deep/60 to-earth-deep/20" />
-        </div>
+        <HeroSlideshow />
 
         <div className="mx-auto flex min-h-[34rem] max-w-7xl items-center px-5 py-24 lg:min-h-[42rem] lg:px-8">
           <div className="max-w-2xl">
