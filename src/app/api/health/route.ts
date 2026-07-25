@@ -4,6 +4,14 @@ import { databaseUrl } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
+/**
+ * VERCEL_GIT_COMMIT_SHA is injected at runtime on Vercel. Netlify only sets
+ * COMMIT_REF at build time, so next.config.ts bakes that one into the bundle
+ * — see the `env` block there.
+ */
+const commit =
+  (process.env.VERCEL_GIT_COMMIT_SHA || process.env.COMMIT_REF)?.slice(0, 7) || "local";
+
 /** Strip credentials out of anything that might contain a connection string. */
 function redact(text: string): string {
   return text
@@ -58,7 +66,7 @@ export async function GET() {
     return NextResponse.json({
       ok: true,
       mode: "database",
-      commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "local",
+      commit,
       host,
       latencyMs: Date.now() - started,
       products,
@@ -69,7 +77,7 @@ export async function GET() {
       {
         ok: false,
         mode: "database",
-        commit: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 7) ?? "local",
+        commit,
         host,
         urlShape: shape,
         errorName: e.name,

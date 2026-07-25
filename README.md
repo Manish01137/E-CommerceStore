@@ -49,7 +49,7 @@ in `.env.local` before seeding for anything non-local).
 | `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`, `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Test-mode keys from the [Razorpay dashboard](https://dashboard.razorpay.com). **When left blank, checkout uses a clearly-labelled mock payment dialog** so the full order flow works locally. |
 | `SHIPROCKET_EMAIL`, `SHIPROCKET_PASSWORD`, `SHIPROCKET_PICKUP_LOCATION` | Shiprocket API-user credentials from [app.shiprocket.in](https://app.shiprocket.in) (Settings → API). When blank, shipment creation is skipped and orders stay in "processing" for manual handling. |
 
-## Deploying to Vercel
+## Deploying to Netlify
 
 ### Option A — deploy now, no database (preview mode)
 
@@ -75,14 +75,16 @@ git add -A && git commit -m "Ethereal Artisan storefront"
 git push
 ```
 
-Import the repo at [vercel.com/new](https://vercel.com/new) and **set no
-environment variables at all**. It builds and ships as-is. Add the database
-later (Option B) and every disabled feature switches on with no code changes.
+Import the repo at [app.netlify.com/start](https://app.netlify.com/start) and
+**set no environment variables at all**. Netlify auto-detects Next.js and
+handles the build with no `netlify.toml` changes needed. It builds and ships
+as-is. Add the database later (Option B) and every disabled feature switches
+on with no code changes.
 
 ### Option B — add the full backend (Supabase)
 
-Vercel runs this app serverless, which changes two things: **there is no local
-database** and **the filesystem is read-only**. Both are handled below.
+Netlify runs this app serverless, which changes two things: **there is no
+local database** and **the filesystem is read-only**. Both are handled below.
 
 #### 1. Create the Supabase project
 
@@ -106,14 +108,14 @@ Both URLs use the **pooler** host. Runtime queries use transaction mode (6543)
 because serverless opens many short-lived connections; Prisma Migrate uses
 session mode (5432) because it needs a real session. Don't use the
 `db.<ref>.supabase.co` direct connection — it's IPv6-only on new projects and
-won't resolve from Vercel. See `prisma.config.ts`.
+won't resolve from Netlify. See `prisma.config.ts`.
 
 If the password contains `@ : / ?` or `#`, URL-encode it (`@` → `%40`).
 
 You can inspect the data any time with `npm run db:studio`, or in Supabase's
 own table editor.
 
-#### 2. Push to GitHub, then import on Vercel
+#### 2. Push to GitHub, then import on Netlify
 
 ```bash
 git add -A
@@ -122,12 +124,13 @@ git remote add origin https://github.com/<you>/<repo>.git
 git push -u origin main
 ```
 
-Then on [vercel.com/new](https://vercel.com/new): import the repo. Framework is
-auto-detected as Next.js — leave the build settings alone. `npm run build` runs
-`prisma generate` first, so the client is always built against the current
-schema.
+Then on [app.netlify.com/start](https://app.netlify.com/start): import the
+repo. Framework is auto-detected as Next.js — leave the build settings alone.
+`npm run build` runs `prisma generate` first, so the client is always built
+against the current schema. `netlify.toml` in the repo root just pins the
+Node version; Netlify's own Next.js runtime handles everything else.
 
-#### 3. Environment variables (Project → Settings → Environment Variables)
+#### 3. Environment variables (Site configuration → Environment variables)
 
 | Variable | Value |
 | -------- | ----- |
@@ -137,23 +140,13 @@ schema.
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Your admin login (used by the seed script) |
 | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Razorpay keys. **Leave blank and checkout falls back to the mock payment dialog** — fine for a demo, not for real orders. |
 | `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` / `SHIPROCKET_PICKUP_LOCATION` | Shiprocket API user. Blank = shipment creation skipped. |
-| `BLOB_READ_WRITE_TOKEN` | Only needed for older token-based Blob stores — see below. |
 
-#### 4. Blob storage — required for admin image uploads
+That's the whole list — **no storage-related variable to add**. Unlike
+Vercel Blob, Netlify Blobs (used by `/api/upload`) authenticates itself
+automatically inside Netlify's own runtime; there's no dashboard step and
+nothing to connect.
 
-Vercel's filesystem is read-only, so `/api/upload` cannot write to
-`public/uploads` in production. It writes to Vercel Blob instead:
-
-- Vercel dashboard → **Storage → Create → Blob**, then **Connect to Project**.
-- Newer Blob stores connect via OIDC and inject `BLOB_STORE_ID` instead of a
-  static token — the `@vercel/blob` SDK picks either one up automatically.
-  Either way, redeploy once after connecting.
-
-Without a connected store, uploads still work locally (files go to
-`public/uploads`), but the **Add Product** image upload in the admin panel
-will fail in production.
-
-#### 5. Changing the schema later
+#### 4. Changing the schema later
 
 ```bash
 npm run db:migrate -- --name what_changed   # dev: edit schema, create migration
@@ -164,13 +157,21 @@ Never hand-edit tables in the Supabase dashboard — the migration history in
 `prisma/migrations/` is the source of truth, and drift will bite on the next
 deploy.
 
-#### 6. Before taking real money
+#### 5. Before taking real money
 
 1. Swap Razorpay test keys for **live** keys and confirm a real ₹1 payment.
 2. Set Shiprocket credentials and the exact pickup-location nickname from your
    Shiprocket settings.
 3. Change `ADMIN_PASSWORD` from the seeded default and re-seed, or update the
    password from the database.
+
+### Deploying to Vercel instead
+
+The same two options work on Vercel with one difference: image uploads need a
+[Vercel Blob](https://vercel.com/docs/storage/vercel-blob) store instead of
+Netlify Blobs — `/api/upload` and `/api/blob/[key]` in this repo are written
+for Netlify, so switching back means restoring the `@vercel/blob`-based
+version of those two files (see git history) rather than just changing env vars.
 
 ## Site map
 

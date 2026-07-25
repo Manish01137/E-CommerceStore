@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
 import crypto from "node:crypto";
-import { put } from "@vercel/blob";
+import { getStore } from "@netlify/blobs";
 import { getSession } from "@/lib/auth";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
@@ -15,24 +15,25 @@ const ALLOWED = new Map([
 const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
 
 /**
- * On Vercel the deployed filesystem is read-only, so image uploads must go
- * through Vercel Blob. A store connected via the dashboard authenticates one
- * of two ways: a static BLOB_READ_WRITE_TOKEN, or (the current default for
- * dashboard-connected stores) OIDC — where Vercel injects BLOB_STORE_ID and
- * the @vercel/blob SDK exchanges the platform's OIDC token for credentials
- * automatically. put() handles picking whichever is present; we just need to
- * know whether *either* is configured before attempting it, so we don't fall
- * through to the read-only filesystem for no reason.
+ * Netlify's runtime filesystem is not writable, so image uploads must go
+ * through Netlify Blobs instead of public/uploads. getStore() auto-configures
+ * itself from the Netlify Functions runtime (siteID + token are injected)
+ * with no env vars for us to set up — but that only works when actually
+ * deployed on Netlify, and doing a network round-trip to find that out on
+ * every local `npm run dev` upload would be wasteful. SITE_ID is a Netlify
+ * runtime-only env var (unlike build-only vars such as COMMIT_REF), so its
+ * presence is a fast, reliable "am I on Netlify" check; the try/catch below
+ * is the real safety net in case that ever changes.
  *
- * The filesystem fallback below used to run unconditionally, so on Vercel it
- * threw an uncaught EROFS and the whole function crashed with a bare,
- * bodyless 500 — the admin panel just showed a "network error" toast with
- * nothing else to go on. Every branch below now returns a real JSON error
- * instead of letting anything throw past this handler.
+ * Blobs served this way have no public CDN URL of their own — GET
+ * /api/blob/[key] (see that route) streams the bytes back out.
+ *
+ * Every branch below returns a real JSON error instead of letting anything
+ * throw past this handler — an uncaught exception here used to come back as
+ * a bodyless 500 that the admin panel could only report as "network error".
  */
-const blobConfigured = Boolean(
-  process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID
-);
+const netlifyBlobsAvailable = Boolean(process.env.SITE_ID || process.env.NETLIFY);
+
 export async function POST(req: NextRequest) {
   if (!DB_ENABLED) {
     return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
@@ -77,15 +78,13 @@ export async function POST(req: NextRequest) {
 
   const name = `${Date.now()}-${crypto.randomBytes(4).toString("hex")}${ext}`;
 
-  if (blobConfigured) {
+  if (netlifyBlobsAvailable) {
     try {
-      const blob = await put(`products/${name}`, file, {
-        access: "public",
-        contentType: file.type,
-      });
-      return NextResponse.json({ url: blob.url }, { status: 201 });
+      const store = getStore("products");
+      await store.set(name, file, { metadata: { contentType: file.type } });
+      return NextResponse.json({ url: `/api/blob/${name}` }, { status: 201 });
     } catch (err) {
-      console.error("upload: Vercel Blob put() failed", err);
+      console.error("upload: Netlify Blobs set() failed", err);
       const message = err instanceof Error ? err.message : String(err);
       return NextResponse.json(
         { error: `Upload to storage failed: ${message}` },
@@ -94,9 +93,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // No Blob store configured. On Vercel this directory is not writable and
-  // every attempt below will fail — that's expected until Blob is set up;
-  // report it clearly rather than crash.
+  // Not running on Netlify (e.g. local dev) — write straight to disk instead.
   try {
     const buffer = Buffer.from(await file.arrayBuffer());
     const dir = path.join(process.cwd(), "public", "uploads");
@@ -108,9 +105,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "Image storage isn't configured for this deployment yet. " +
-          "An admin needs to add a Vercel Blob store (Storage → Create → Blob) " +
-          "and connect it to this project, then redeploy.",
+          "Image storage isn't available in this environment. " +
+          "Uploads work on Netlify deploys automatically (Netlify Blobs) " +
+          "and locally via public/uploads — check the server logs for details.",
       },
       { status: 503 }
     );
