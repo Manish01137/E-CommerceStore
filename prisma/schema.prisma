@@ -215,3 +215,22 @@ model Review {
   @@index([rating])
   @@map("reviews")
 }
+
+/// Site-wide store settings — a single row, always read/written by id "main".
+/// Currently just delivery pricing; the shape is deliberately a flat row
+/// (not key/value) so new settings stay type-checked instead of stringly-typed.
+model Settings {
+  id String @id @default("main")
+
+  /// Flat delivery fee in INR, charged when the cart subtotal is below
+  /// freeShippingAbove.
+  shippingFee Int @default(79) @map("shipping_fee")
+
+  /// Cart subtotal (INR) at or above which delivery is free. Null disables
+  /// free shipping entirely — every order pays shippingFee.
+  freeShippingAbove Int? @default(999) @map("free_shipping_above")
+
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}

@@ -2,13 +2,20 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "./CartContext";
 import { formatINR } from "@/lib/format";
 
+// Shown until /api/settings responds; the admin-configured value (fetched
+// below) always wins once it arrives, same fallback pattern as checkout.
+const FALLBACK_FREE_SHIPPING_ABOVE = 999;
+
 export default function CartDrawer() {
   const { items, drawerOpen, closeDrawer, updateQuantity, removeItem, subtotal } = useCart();
+  const [freeShippingAbove, setFreeShippingAbove] = useState<number | null>(
+    FALLBACK_FREE_SHIPPING_ABOVE
+  );
 
   useEffect(() => {
     if (!drawerOpen) return;
@@ -22,6 +29,18 @@ export default function CartDrawer() {
       document.body.style.overflow = "";
     };
   }, [drawerOpen, closeDrawer]);
+
+  useEffect(() => {
+    if (!drawerOpen) return;
+    fetch("/api/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && typeof d.shippingFee === "number") {
+          setFreeShippingAbove(d.freeShippingAbove ?? null);
+        }
+      })
+      .catch(() => {});
+  }, [drawerOpen]);
 
   return (
     <AnimatePresence>
@@ -144,7 +163,9 @@ export default function CartDrawer() {
                     <span className="font-serif text-xl font-semibold">{formatINR(subtotal)}</span>
                   </div>
                   <p className="mb-4 text-xs text-earth/75">
-                    Shipping calculated at checkout. Free above ₹999.
+                    {freeShippingAbove !== null
+                      ? `Shipping calculated at checkout. Free above ${formatINR(freeShippingAbove)}.`
+                      : "Shipping calculated at checkout."}
                   </p>
                   <Link href="/checkout" onClick={closeDrawer} className="btn btn-primary w-full">
                     Proceed to Checkout

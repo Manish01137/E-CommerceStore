@@ -10,8 +10,11 @@ import { useToast } from "@/components/ui/Toast";
 import { formatINR } from "@/lib/format";
 import type { AddressDTO } from "@/lib/types";
 
-const FREE_SHIPPING_ABOVE = 999;
-const SHIPPING_FEE = 79;
+// Sane defaults shown until /api/settings responds, so the summary never
+// flashes ₹0 shipping or NaN math while loading. The admin-configured value
+// (fetched below) always wins once it arrives.
+const FALLBACK_SHIPPING_FEE = 79;
+const FALLBACK_FREE_SHIPPING_ABOVE = 999;
 
 const EMPTY_ADDRESS = {
   fullName: "",
@@ -52,8 +55,11 @@ export default function CheckoutClient() {
   const [placing, setPlacing] = useState(false);
   const [mockOrder, setMockOrder] = useState<{ orderId: string; orderNumber: string; total: number } | null>(null);
   const [mockBusy, setMockBusy] = useState(false);
+  const [shippingFeeRate, setShippingFeeRate] = useState(FALLBACK_SHIPPING_FEE);
+  const [freeShippingAbove, setFreeShippingAbove] = useState<number | null>(FALLBACK_FREE_SHIPPING_ABOVE);
 
-  const shippingFee = subtotal >= FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
+  const shippingFee =
+    freeShippingAbove !== null && subtotal >= freeShippingAbove ? 0 : shippingFeeRate;
   const total = subtotal + shippingFee;
 
   useEffect(() => {
@@ -66,6 +72,17 @@ export default function CheckoutClient() {
       .then((d) => {
         if (d.user?.email) {
           setAddress((a) => ({ ...a, email: a.email || d.user.email }));
+        }
+      })
+      .catch(() => {});
+    // Admin-configured delivery pricing — falls back to the constants above
+    // if this never resolves (e.g. offline), so checkout still works.
+    fetch("/api/settings")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && typeof d.shippingFee === "number") {
+          setShippingFeeRate(d.shippingFee);
+          setFreeShippingAbove(d.freeShippingAbove ?? null);
         }
       })
       .catch(() => {});
@@ -416,9 +433,9 @@ export default function CheckoutClient() {
               <dd className="font-serif text-xl font-semibold">{formatINR(total)}</dd>
             </div>
           </dl>
-          {shippingFee > 0 && (
+          {shippingFee > 0 && freeShippingAbove !== null && (
             <p className="mt-3 rounded-lg bg-sage/25 px-3 py-2 text-xs text-moss-deep">
-              Add {formatINR(FREE_SHIPPING_ABOVE - subtotal)} more for free shipping.
+              Add {formatINR(freeShippingAbove - subtotal)} more for free shipping.
             </p>
           )}
         </motion.aside>

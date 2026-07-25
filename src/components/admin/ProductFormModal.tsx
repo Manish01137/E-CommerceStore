@@ -69,14 +69,19 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
     form.append("file", file);
     try {
       const res = await fetch("/api/upload", { method: "POST", body: form });
-      const data = await res.json();
+      // The server always replies with JSON, success or failure — but parse
+      // defensively so a proxy/edge error page can't masquerade as a vague
+      // "network error" when it's actually a server-side failure.
+      const data = await res.json().catch(() => null);
       if (!res.ok) {
-        toast(data.error ?? "Upload failed", "error");
-      } else {
+        toast(data?.error ?? `Upload failed (HTTP ${res.status})`, "error");
+      } else if (data?.url) {
         setValues((v) => ({ ...v, images: [...v.images, data.url] }));
+      } else {
+        toast("Upload succeeded but returned no image URL", "error");
       }
     } catch {
-      toast("Upload failed — network error", "error");
+      toast("Upload failed — check your internet connection", "error");
     }
     setUploading(false);
   };

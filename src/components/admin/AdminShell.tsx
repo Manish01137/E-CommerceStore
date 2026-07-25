@@ -11,6 +11,7 @@ const NAV = [
   { href: "/admin/orders", label: "Orders", icon: "M6 4 L18 4 L18 20 L6 20 Z M9 8 H15 M9 12 H15 M9 16 H12" },
   { href: "/admin/customers", label: "Customers", icon: "M9 11 A3.5 3.5 0 1 0 9 4 A3.5 3.5 0 0 0 9 11 Z M2.5 20 C 2.5 15.5 5.5 13.5 9 13.5 C 12.5 13.5 15.5 15.5 15.5 20 M16 11 A3 3 0 1 0 15 4.2 M17 13.6 C 19.8 14.2 21.5 16.2 21.5 20" },
   { href: "/admin/enquiries", label: "B2B Enquiries", icon: "M4 5 L20 5 L20 17 L13 17 L8 21 L8 17 L4 17 Z M8 9 H16 M8 12 H13" },
+  { href: "/admin/settings", label: "Delivery Settings", icon: "M10.5 3 H13.5 L14.1 5.6 A7 7 0 0 1 16.3 6.9 L18.9 6 L20.9 9.5 L18.9 11.2 A7 7 0 0 1 18.9 12.8 L20.9 14.5 L18.9 18 L16.3 17.1 A7 7 0 0 1 14.1 18.4 L13.5 21 H10.5 L9.9 18.4 A7 7 0 0 1 7.7 17.1 L5.1 18 L3.1 14.5 L5.1 12.8 A7 7 0 0 1 5.1 11.2 L3.1 9.5 L5.1 6 L7.7 6.9 A7 7 0 0 1 9.9 5.6 Z M12 9.5 A2.5 2.5 0 1 0 12 14.5 A2.5 2.5 0 0 0 12 9.5 Z" },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

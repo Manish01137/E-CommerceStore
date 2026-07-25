@@ -4,10 +4,8 @@ import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { toOrderDTO } from "@/lib/map";
 import { isRazorpayConfigured, createRazorpayOrder } from "@/lib/razorpay";
+import { getShippingSettings, computeShippingFee } from "@/lib/settings";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
-
-const SHIPPING_FEE = 79;
-const FREE_SHIPPING_ABOVE = 999;
 
 const orderSchema = z.object({
   items: z
@@ -89,7 +87,8 @@ export async function POST(req: NextRequest) {
   }
 
   const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const shippingFee = subtotal >= FREE_SHIPPING_ABOVE ? 0 : SHIPPING_FEE;
+  const shipping = await getShippingSettings();
+  const shippingFee = computeShippingFee(subtotal, shipping);
   const total = subtotal + shippingFee;
 
   const order = await prisma.order.create({
@@ -115,23 +114,32 @@ export async function POST(req: NextRequest) {
   });
 
   if (isRazorpayConfigured()) {
-    const rzpOrder = await createRazorpayOrder(total, order.orderNumber);
-    await prisma.order.update({
-      where: { id: order.id },
-      data: { razorpayOrderId: rzpOrder.id },
-    });
-    return NextResponse.json({
-      orderId: order.id,
-      orderNumber: order.orderNumber,
-      total,
-      payment: {
-        provider: "razorpay",
-        razorpayOrderId: rzpOrder.id,
-        keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID,
-        amount: Math.round(total * 100),
-        currency: "INR",
-      },
-    });
+    try {
+      const rzpOrder = await createRazorpayOrder(total, order.orderNumber);
+      await prisma.order.update({
+        where: { id: order.id },
+        data: { razorpayOrderId: rzpOrder.id },
+      });
+      return NextResponse.json({
+        orderId: order.id,
+        orderNumber: order.orderNumber,
+        total,
+        payment: {
+          provider: "razorpay",
+          razorpayOrderId: rzpOrder.id,
+          keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || process.env.RAZORPAY_KEY_ID,
+          amount: Math.round(total * 100),
+          currency: "INR",
+        },
+      });
+    } catch (err: unknown) {
+      console.error("Razorpay order creation failed:", err);
+      const errorMsg = err instanceof Error ? err.message : "Razorpay order creation failed";
+      return NextResponse.json(
+        { error: `Payment gateway error: ${errorMsg}. Please check your Razorpay Key ID & Secret.` },
+        { status: 500 }
+      );
+    }
   }
 
   // No gateway keys configured — dev/test mock flow
