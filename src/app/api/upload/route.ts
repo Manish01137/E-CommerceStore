@@ -16,15 +16,23 @@ const MAX_BYTES = 4 * 1024 * 1024; // 4 MB
 
 /**
  * On Vercel the deployed filesystem is read-only, so image uploads must go
- * through Vercel Blob (BLOB_READ_WRITE_TOKEN). Without that token, uploads
- * fall back to writing into public/uploads — which only works locally.
+ * through Vercel Blob. A store connected via the dashboard authenticates one
+ * of two ways: a static BLOB_READ_WRITE_TOKEN, or (the current default for
+ * dashboard-connected stores) OIDC — where Vercel injects BLOB_STORE_ID and
+ * the @vercel/blob SDK exchanges the platform's OIDC token for credentials
+ * automatically. put() handles picking whichever is present; we just need to
+ * know whether *either* is configured before attempting it, so we don't fall
+ * through to the read-only filesystem for no reason.
  *
- * That fallback used to attempt the filesystem write unconditionally, so on
- * Vercel it threw an uncaught EROFS and the whole function crashed with a
- * bare, bodyless 500 — the admin panel just showed a "network error" toast
- * with nothing else to go on. Every branch below now returns a real JSON
- * error instead of letting anything throw past this handler.
+ * The filesystem fallback below used to run unconditionally, so on Vercel it
+ * threw an uncaught EROFS and the whole function crashed with a bare,
+ * bodyless 500 — the admin panel just showed a "network error" toast with
+ * nothing else to go on. Every branch below now returns a real JSON error
+ * instead of letting anything throw past this handler.
  */
+const blobConfigured = Boolean(
+  process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID
+);
 export async function POST(req: NextRequest) {
   if (!DB_ENABLED) {
     return NextResponse.json({ error: DEMO_MESSAGE }, { status: 503 });
@@ -69,7 +77,7 @@ export async function POST(req: NextRequest) {
 
   const name = `${Date.now()}-${crypto.randomBytes(4).toString("hex")}${ext}`;
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (blobConfigured) {
     try {
       const blob = await put(`products/${name}`, file, {
         access: "public",
@@ -86,7 +94,7 @@ export async function POST(req: NextRequest) {
     }
   }
 
-  // No Blob token configured. On Vercel this directory is not writable and
+  // No Blob store configured. On Vercel this directory is not writable and
   // every attempt below will fail — that's expected until Blob is set up;
   // report it clearly rather than crash.
   try {
@@ -102,7 +110,7 @@ export async function POST(req: NextRequest) {
         error:
           "Image storage isn't configured for this deployment yet. " +
           "An admin needs to add a Vercel Blob store (Storage → Create → Blob) " +
-          "and redeploy — see BLOB_READ_WRITE_TOKEN in .env.example.",
+          "and connect it to this project, then redeploy.",
       },
       { status: 503 }
     );

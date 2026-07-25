@@ -137,18 +137,21 @@ schema.
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Your admin login (used by the seed script) |
 | `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID` | Razorpay keys. **Leave blank and checkout falls back to the mock payment dialog** — fine for a demo, not for real orders. |
 | `SHIPROCKET_EMAIL` / `SHIPROCKET_PASSWORD` / `SHIPROCKET_PICKUP_LOCATION` | Shiprocket API user. Blank = shipment creation skipped. |
-| `BLOB_READ_WRITE_TOKEN` | Added automatically when you create a Blob store (below). |
+| `BLOB_READ_WRITE_TOKEN` | Only needed for older token-based Blob stores — see below. |
 
 #### 4. Blob storage — required for admin image uploads
 
 Vercel's filesystem is read-only, so `/api/upload` cannot write to
 `public/uploads` in production. It writes to Vercel Blob instead:
 
-- Vercel dashboard → **Storage → Create → Blob**, connect it to the project.
-- This injects `BLOB_READ_WRITE_TOKEN` automatically; redeploy once.
+- Vercel dashboard → **Storage → Create → Blob**, then **Connect to Project**.
+- Newer Blob stores connect via OIDC and inject `BLOB_STORE_ID` instead of a
+  static token — the `@vercel/blob` SDK picks either one up automatically.
+  Either way, redeploy once after connecting.
 
-Without the token, uploads still work locally (files go to `public/uploads`),
-but the **Add Product** image upload in the admin panel will fail in production.
+Without a connected store, uploads still work locally (files go to
+`public/uploads`), but the **Add Product** image upload in the admin panel
+will fail in production.
 
 #### 5. Changing the schema later
 
