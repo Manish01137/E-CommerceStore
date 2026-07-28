@@ -10,6 +10,10 @@ const SLIDES = [
     alt: "Ethereal Artisan Goat Milk Strawberry soap bar, hand-poured with creamy goat milk and sweet strawberry",
   },
   {
+    src: "/products/body-wash-coffee-granules.png",
+    alt: "Ethereal Artisan Coffee Body Wash with exfoliating coffee granules",
+  },
+  {
     src: "/products/haircare-lavender.jpg",
     alt: "Ethereal Artisan Lush Lavender shampoo and conditioner with calming botanical lavender",
   },
