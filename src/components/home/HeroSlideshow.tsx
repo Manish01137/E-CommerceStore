@@ -18,11 +18,6 @@ const SLIDES = [
     fit: "contain" as const,
   },
   {
-    src: "/products/haircare-lavender.jpg",
-    alt: "Ethereal Artisan Lush Lavender shampoo and conditioner with calming botanical lavender",
-    fit: "cover" as const,
-  },
-  {
     src: "/products/goat-milk-cherry-blossom-soap.jpg",
     alt: "Ethereal Artisan Goat Milk Cherry Blossom soap bar, hand-poured with fresh goat milk",
     fit: "cover" as const,
