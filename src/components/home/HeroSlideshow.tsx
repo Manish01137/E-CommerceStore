@@ -8,18 +8,24 @@ const SLIDES = [
   {
     src: "/products/goat-milk-strawberry-soap.jpg",
     alt: "Ethereal Artisan Goat Milk Strawberry soap bar, hand-poured with creamy goat milk and sweet strawberry",
+    fit: "cover" as const,
   },
   {
+    // Tall bottle product shot, not a wide flat-lay like the others — cover
+    // would zoom in and crop most of the bottle off. Shown in full instead.
     src: "/products/body-wash-coffee-granules.png",
     alt: "Ethereal Artisan Coffee Body Wash with exfoliating coffee granules",
+    fit: "contain" as const,
   },
   {
     src: "/products/haircare-lavender.jpg",
     alt: "Ethereal Artisan Lush Lavender shampoo and conditioner with calming botanical lavender",
+    fit: "cover" as const,
   },
   {
     src: "/products/goat-milk-cherry-blossom-soap.jpg",
     alt: "Ethereal Artisan Goat Milk Cherry Blossom soap bar, hand-poured with fresh goat milk",
+    fit: "cover" as const,
   },
 ];
 
@@ -51,13 +57,29 @@ export default function HeroSlideshow() {
           transition={{ duration: 1.4, ease: "easeInOut" }}
           className="absolute inset-0"
         >
+          {SLIDES[index].fit === "contain" && (
+            // Blurred cover fill so a portrait photo still reaches every edge
+            // of the wide hero box, instead of leaving bare gaps beside it.
+            <Image
+              src={SLIDES[index].src}
+              alt=""
+              aria-hidden
+              fill
+              sizes="100vw"
+              className="scale-110 object-cover object-center blur-2xl"
+            />
+          )}
           <Image
             src={SLIDES[index].src}
             alt={SLIDES[index].alt}
             fill
             priority={index === 0}
             sizes="100vw"
-            className="object-cover object-center"
+            className={
+              SLIDES[index].fit === "contain"
+                ? "object-contain object-center"
+                : "object-cover object-center"
+            }
           />
         </motion.div>
       </AnimatePresence>
