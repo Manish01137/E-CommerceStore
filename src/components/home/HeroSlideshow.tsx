@@ -22,6 +22,16 @@ const SLIDES = [
     alt: "Ethereal Artisan Goat Milk Cherry Blossom soap bar, hand-poured with fresh goat milk",
     fit: "cover" as const,
   },
+  {
+    src: "/products/clay-soap-green-french.jpg",
+    alt: "Ethereal Artisan Green French Clay soap bar with lemongrass, a soft mineral-blue bar",
+    fit: "cover" as const,
+  },
+  {
+    src: "/products/soap-aloe-vera.jpg",
+    alt: "Ethereal Artisan Aloe Vera soap bar, a translucent green bar with fresh aloe vera gel",
+    fit: "cover" as const,
+  },
 ];
 
 const INTERVAL_MS = 5500;
