@@ -8,6 +8,26 @@ import { config } from "dotenv";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../src/generated/prisma/index.js";
 
+// Mirrors CATEGORIES in src/lib/types.ts — duplicated (not imported) because
+// this script runs under plain `node`, not the Next.js TS pipeline. Only
+// used as the one-time backfill for the Category table; every category
+// after this point is created, renamed and deleted from the admin panel.
+const STARTER_CATEGORIES = [
+  "Soap",
+  "Body Wash",
+  "Body Lotion",
+  "Body Scrub",
+  "Face Wash",
+  "Face Cream",
+  "Face Pack",
+  "Shampoo",
+  "Conditioner",
+  "Bath Salt",
+  "Travel Kit",
+];
+const slugify = (s) =>
+  s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+
 config({ path: ".env.local", quiet: true });
 config({ path: ".env", quiet: true });
 
@@ -40,6 +60,25 @@ async function seed() {
     });
   }
   console.log(`✓ Seeded ${catalogue.length} products`);
+
+  // Backfill the Category table so every category already in use by a
+  // product exists as a manageable row before the admin panel's category
+  // validation goes live. Starter list first (keeps the curated display
+  // order), then anything else actually present in the catalogue that
+  // isn't already covered — belt and suspenders against future drift.
+  const catalogueCategories = [...new Set(catalogue.map((p) => p.category))];
+  const allCategories = [
+    ...STARTER_CATEGORIES,
+    ...catalogueCategories.filter((c) => !STARTER_CATEGORIES.includes(c)),
+  ];
+  for (const [i, name] of allCategories.entries()) {
+    await prisma.category.upsert({
+      where: { name },
+      update: {},
+      create: { name, slug: slugify(name), sortOrder: i },
+    });
+  }
+  console.log(`✓ Ensured ${allCategories.length} categories exist`);
 
   // Retire anything in the DB that's no longer in the price list, rather than
   // deleting it — past orders must keep resolving their product rows.

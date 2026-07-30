@@ -4,7 +4,7 @@ import { prisma } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 import { isUuid } from "@/lib/format";
 import { toProductDTO } from "@/lib/map";
-import { CATEGORIES } from "@/lib/types";
+import { listCategoryNames } from "@/lib/categories";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 type Params = { params: Promise<{ id: string }> };
@@ -23,7 +23,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
 const updateSchema = z.object({
   name: z.string().min(2).optional(),
-  category: z.enum(CATEGORIES).optional(),
+  category: z.string().min(1).optional(),
   size: z.string().optional(),
   scents: z.array(z.string().min(1)).min(1).optional(),
   description: z.string().min(10).optional(),
@@ -54,6 +54,9 @@ export async function PUT(req: NextRequest, { params }: Params) {
       { error: "Invalid product data", details: parsed.error.flatten() },
       { status: 400 }
     );
+  }
+  if (parsed.data.category && !(await listCategoryNames()).includes(parsed.data.category)) {
+    return NextResponse.json({ error: "Unknown category — refresh and try again" }, { status: 400 });
   }
 
   const existing = await prisma.product.findUnique({ where: { id } });

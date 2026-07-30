@@ -5,21 +5,28 @@ import { getSession } from "@/lib/auth";
 import { slugify } from "@/lib/format";
 import { listProducts } from "@/lib/products";
 import { toProductDTO } from "@/lib/map";
-import { CATEGORIES } from "@/lib/types";
+import { listCategoryNames } from "@/lib/categories";
 import { DB_ENABLED, DEMO_MESSAGE } from "@/lib/demo";
 
 export async function GET(req: NextRequest) {
   const params = req.nextUrl.searchParams;
   const rawCategory = params.get("category");
 
+  // status=all is admin-only — the public storefront must never see
+  // hidden/retired products, even if it guesses the query param.
+  let includeInactive = false;
+  if (params.get("status") === "all") {
+    const session = await getSession();
+    includeInactive = session?.role === "admin";
+  }
+
+  const validCategories = rawCategory ? await listCategoryNames() : [];
   const products = await listProducts({
-    category:
-      rawCategory && (CATEGORIES as readonly string[]).includes(rawCategory)
-        ? rawCategory
-        : null,
+    category: rawCategory && validCategories.includes(rawCategory) ? rawCategory : null,
     scent: params.get("scent") || null,
     q: params.get("q")?.trim() || null,
     sort: params.get("sort"),
+    includeInactive,
   });
 
   return NextResponse.json({ products });
@@ -27,7 +34,7 @@ export async function GET(req: NextRequest) {
 
 const productSchema = z.object({
   name: z.string().min(2),
-  category: z.enum(CATEGORIES),
+  category: z.string().min(1, "Pick a category"),
   size: z.string().optional().default(""),
   scents: z.array(z.string().min(1)).min(1),
   description: z.string().min(10),
@@ -56,6 +63,9 @@ export async function POST(req: NextRequest) {
       { error: "Invalid product data", details: parsed.error.flatten() },
       { status: 400 }
     );
+  }
+  if (!(await listCategoryNames()).includes(parsed.data.category)) {
+    return NextResponse.json({ error: "Unknown category — refresh and try again" }, { status: 400 });
   }
 
   let slug = slugify(parsed.data.name);

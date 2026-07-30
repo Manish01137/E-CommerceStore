@@ -8,6 +8,7 @@ import { useState } from "react";
 const NAV = [
   { href: "/admin", label: "Dashboard", icon: "M4 13 L10 13 L10 4 L4 4 Z M4 20 L10 20 L10 16 L4 16 Z M14 20 L20 20 L20 11 L14 11 Z M14 8 L20 8 L20 4 L14 4 Z" },
   { href: "/admin/products", label: "Products", icon: "M12 3 L20 7.5 L20 16.5 L12 21 L4 16.5 L4 7.5 Z M4 7.5 L12 12 L20 7.5 M12 12 L12 21" },
+  { href: "/admin/categories", label: "Categories", icon: "M11 4 L4 11 V19 A1 1 0 0 0 5 20 H13 A1 1 0 0 0 14 19 V11 Z M4 11 L11 4 L20 4 V13 L14 19 M17 8 A1 1 0 1 0 17 8.01" },
   { href: "/admin/orders", label: "Orders", icon: "M6 4 L18 4 L18 20 L6 20 Z M9 8 H15 M9 12 H15 M9 16 H12" },
   { href: "/admin/customers", label: "Customers", icon: "M9 11 A3.5 3.5 0 1 0 9 4 A3.5 3.5 0 0 0 9 11 Z M2.5 20 C 2.5 15.5 5.5 13.5 9 13.5 C 12.5 13.5 15.5 15.5 15.5 20 M16 11 A3 3 0 1 0 15 4.2 M17 13.6 C 19.8 14.2 21.5 16.2 21.5 20" },
   { href: "/admin/enquiries", label: "B2B Enquiries", icon: "M4 5 L20 5 L20 17 L13 17 L8 21 L8 17 L4 17 Z M8 9 H16 M8 12 H13" },

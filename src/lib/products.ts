@@ -1,5 +1,6 @@
 import { DB_ENABLED } from "@/lib/demo";
-import { CATEGORIES, type ProductDTO } from "@/lib/types";
+import { type ProductDTO } from "@/lib/types";
+import { listCategoryNames } from "@/lib/categories";
 import {
   filterCatalogue,
   catalogueBySlug,
@@ -63,6 +64,8 @@ export async function listProducts(opts: {
   scent?: string | null;
   q?: string | null;
   sort?: string | null;
+  /** Admin-only: include hidden (active: false) products too. */
+  includeInactive?: boolean;
 }): Promise<ProductDTO[]> {
   if (!DB_ENABLED) return filterCatalogue(opts);
 
@@ -74,7 +77,7 @@ export async function listProducts(opts: {
 
   const rows = await prisma.product.findMany({
     where: {
-      active: true,
+      ...(opts.includeInactive ? {} : { active: true }),
       ...(opts.category ? { category: opts.category } : {}),
       ...(opts.scent ? { scents: { has: opts.scent } } : {}),
       ...(q
@@ -163,15 +166,16 @@ export interface Facets {
  */
 export async function getFacets(): Promise<Facets> {
   const all = await listProducts({});
-  const categories = new Set<string>();
+  const categoriesPresent = new Set<string>();
   const scents = new Set<string>();
   for (const p of all) {
-    categories.add(p.category);
+    categoriesPresent.add(p.category);
     p.scents.forEach((s) => scents.add(s));
   }
+  const orderedNames = await listCategoryNames();
   return {
-    // Keep categories in the canonical catalogue order, not alphabetical
-    categories: (CATEGORIES as readonly string[]).filter((c) => categories.has(c)),
+    // Keep categories in their admin-configured order, not alphabetical
+    categories: orderedNames.filter((c) => categoriesPresent.has(c)),
     scents: [...scents].sort((a, b) => a.localeCompare(b)),
   };
 }

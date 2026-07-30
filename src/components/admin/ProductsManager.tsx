@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { formatINR } from "@/lib/format";
 import { useToast } from "@/components/ui/Toast";
 import ProductFormModal from "./ProductFormModal";
 import type { ProductDTO } from "@/lib/types";
+
+const LOW_STOCK = 5;
 
 export default function ProductsManager() {
   const { toast } = useToast();
@@ -15,14 +17,40 @@ export default function ProductsManager() {
   const [deleting, setDeleting] = useState<ProductDTO | null>(null);
   const [busy, setBusy] = useState(false);
 
+  const [search, setSearch] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState<"all" | "live" | "hidden">("all");
+  const [stockFilter, setStockFilter] = useState<"all" | "in" | "low" | "out">("all");
+
   const load = () => {
-    fetch("/api/products?sort=newest")
+    // status=all so hidden products still show up here to be managed —
+    // the public storefront never sees them, only an authenticated admin.
+    fetch("/api/products?sort=newest&status=all")
       .then((r) => r.json())
       .then((d) => setProducts(d.products))
       .catch(() => toast("Could not load products", "error"));
   };
 
   useEffect(load, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const categories = useMemo(
+    () => [...new Set((products ?? []).map((p) => p.category))].sort((a, b) => a.localeCompare(b)),
+    [products]
+  );
+
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    return (products ?? []).filter((p) => {
+      if (q && !`${p.name} ${p.slug} ${p.category}`.toLowerCase().includes(q)) return false;
+      if (categoryFilter !== "all" && p.category !== categoryFilter) return false;
+      if (statusFilter === "live" && !p.active) return false;
+      if (statusFilter === "hidden" && p.active) return false;
+      if (stockFilter === "out" && p.stock !== 0) return false;
+      if (stockFilter === "low" && !(p.stock > 0 && p.stock <= LOW_STOCK)) return false;
+      if (stockFilter === "in" && p.stock <= LOW_STOCK) return false;
+      return true;
+    });
+  }, [products, search, categoryFilter, statusFilter, stockFilter]);
 
   const confirmDelete = async () => {
     if (!deleting) return;
@@ -44,13 +72,53 @@ export default function ProductsManager() {
         <div>
           <h1 className="font-serif text-3xl">Products</h1>
           <p className="mt-1 text-sm text-earth">
-            {products ? `${products.length} products in the catalogue` : "Loading…"}
+            {products
+              ? `${visible.length} of ${products.length} products`
+              : "Loading…"}
           </p>
         </div>
         <button onClick={() => setEditing("new")} className="btn btn-primary">
           + Add Product
         </button>
       </div>
+
+      {products !== null && products.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-3">
+          <input
+            className="field max-w-xs"
+            placeholder="Search name, slug, category…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <select
+            className="field w-auto cursor-pointer"
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="all">All categories</option>
+            {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+          </select>
+          <select
+            className="field w-auto cursor-pointer"
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value as typeof statusFilter)}
+          >
+            <option value="all">All statuses</option>
+            <option value="live">Live</option>
+            <option value="hidden">Hidden</option>
+          </select>
+          <select
+            className="field w-auto cursor-pointer"
+            value={stockFilter}
+            onChange={(e) => setStockFilter(e.target.value as typeof stockFilter)}
+          >
+            <option value="all">All stock</option>
+            <option value="in">In stock</option>
+            <option value="low">Low stock (≤{LOW_STOCK})</option>
+            <option value="out">Out of stock</option>
+          </select>
+        </div>
+      )}
 
       {products === null ? (
         <div className="mt-8 space-y-3">
@@ -62,6 +130,10 @@ export default function ProductsManager() {
           <p className="text-sm text-earth">Add your first product to open the store.</p>
           <button onClick={() => setEditing("new")} className="btn btn-primary">+ Add Product</button>
         </div>
+      ) : visible.length === 0 ? (
+        <p className="mt-8 rounded-2xl border border-sand bg-almond-light p-10 text-earth">
+          No products match these filters.
+        </p>
       ) : (
         <div className="mt-8 overflow-x-auto rounded-2xl border border-sand bg-almond-light">
           <table className="w-full min-w-[48rem] text-sm">
@@ -77,7 +149,7 @@ export default function ProductsManager() {
               </tr>
             </thead>
             <tbody className="divide-y divide-sand/60">
-              {products.map((p) => (
+              {visible.map((p) => (
                 <tr key={p._id} className="transition-colors hover:bg-almond">
                   <td className="px-5 py-3">
                     <div className="flex items-center gap-3">
@@ -97,7 +169,7 @@ export default function ProductsManager() {
                   <td className="px-5 py-3 text-earth">{p.category}</td>
                   <td className="px-5 py-3 text-earth">{p.scents.join(", ")}</td>
                   <td className="px-5 py-3 text-right font-semibold">{formatINR(p.price)}</td>
-                  <td className={`px-5 py-3 text-right font-semibold ${p.stock <= 5 ? "text-[#a3542a]" : ""}`}>
+                  <td className={`px-5 py-3 text-right font-semibold ${p.stock <= LOW_STOCK ? "text-[#a3542a]" : ""}`}>
                     {p.stock}
                   </td>
                   <td className="px-5 py-3">

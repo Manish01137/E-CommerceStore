@@ -234,3 +234,21 @@ model Settings {
 
   @@map("settings")
 }
+
+/// Admin-managed product categories. Product.category stays a plain string
+/// (not a foreign key) so every existing reader of it keeps working
+/// unchanged — this table is the source of truth for the *set* of valid
+/// names, display order, and safe rename/delete from the admin panel.
+model Category {
+  id   String @id @default(uuid()) @db.Uuid
+  name String @unique
+  slug String @unique
+
+  /// Display order in the admin dropdown and shop filter — lower first.
+  sortOrder Int @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("categories")
+}

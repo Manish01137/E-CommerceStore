@@ -1,24 +1,10 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/Toast";
 import type { ProductDTO } from "@/lib/types";
-
-const CATEGORIES = [
-  "Soap",
-  "Body Wash",
-  "Body Lotion",
-  "Body Scrub",
-  "Face Wash",
-  "Face Cream",
-  "Face Pack",
-  "Shampoo",
-  "Conditioner",
-  "Bath Salt",
-  "Travel Kit",
-];
 
 interface Props {
   product: ProductDTO | null;
@@ -30,6 +16,14 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
   const { toast } = useToast();
   const isNew = product === null;
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const [categories, setCategories] = useState<string[] | null>(null);
+  useEffect(() => {
+    fetch("/api/admin/categories")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => setCategories((d?.categories ?? []).map((c: { name: string }) => c.name)))
+      .catch(() => setCategories([]));
+  }, []);
 
   const [values, setValues] = useState({
     name: product?.name ?? "",
@@ -181,11 +175,17 @@ export default function ProductFormModal({ product, onClose, onSaved }: Props) {
               <label className="mb-1.5 block text-sm font-semibold" htmlFor="p-category">Category</label>
               <select id="p-category" className={`field cursor-pointer ${errors.category ? "field-error" : ""}`}
                 value={values.category}
+                disabled={categories === null}
                 onChange={(e) => setValues((v) => ({ ...v, category: e.target.value }))}>
-                <option value="">Select…</option>
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                <option value="">{categories === null ? "Loading…" : "Select…"}</option>
+                {categories?.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
               {errors.category && <p className="form-error">{errors.category}</p>}
+              {categories?.length === 0 && (
+                <p className="mt-1 text-xs text-earth/75">
+                  No categories yet — add one from the Categories page first.
+                </p>
+              )}
             </div>
             <div>
               <label className="mb-1.5 block text-sm font-semibold" htmlFor="p-size">
