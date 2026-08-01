@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import Reveal from "@/components/motion/Reveal";
-import { getFacets } from "@/lib/products";
+import { getFacets, listProducts } from "@/lib/products";
 import ProductsBrowser from "@/components/product/ProductsBrowser";
 
 export const metadata: Metadata = {
@@ -12,8 +12,21 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function ProductsPage() {
-  const facets = await getFacets();
+type SearchParams = Promise<{ category?: string; scent?: string; sort?: string }>;
+
+export default async function ProductsPage({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams;
+  // Fetched with the same default filters ProductsBrowser starts with, so its
+  // first render already has data instead of re-fetching an identical list
+  // client-side — one fewer full round trip on the page every visitor hits.
+  const [facets, initialProducts] = await Promise.all([
+    getFacets(),
+    listProducts({
+      category: params.category ?? null,
+      scent: params.scent ?? null,
+      sort: params.sort ?? null,
+    }),
+  ]);
   return (
     <div className="mx-auto max-w-7xl px-5 py-12 lg:px-8 lg:py-16">
       <Reveal>
@@ -25,7 +38,7 @@ export default async function ProductsPage() {
         </p>
       </Reveal>
       <Suspense>
-        <ProductsBrowser facets={facets} />
+        <ProductsBrowser facets={facets} initialProducts={initialProducts} />
       </Suspense>
     </div>
   );

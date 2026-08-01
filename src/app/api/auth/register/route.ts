@@ -28,22 +28,30 @@ export async function POST(req: NextRequest) {
   const { name, password } = parsed.data;
   const email = parsed.data.email.toLowerCase().trim();
 
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    return NextResponse.json(
-      { error: "An account with this email already exists" },
-      { status: 409 }
-    );
+  // One round trip instead of findUnique-then-create: with high-latency DB
+  // connections (see src/lib/db.ts), every extra query is real, felt delay.
+  // The unique constraint on email already guarantees no duplicate can slip
+  // through, so let Postgres reject it (P2002) instead of pre-checking.
+  let user;
+  try {
+    user = await prisma.user.create({
+      data: {
+        name: name.trim(),
+        email,
+        passwordHash: await bcrypt.hash(password, 10),
+        role: "customer",
+      },
+    });
+  } catch (err: unknown) {
+    const code = (err as { code?: string })?.code;
+    if (code === "P2002") {
+      return NextResponse.json(
+        { error: "An account with this email already exists" },
+        { status: 409 }
+      );
+    }
+    throw err;
   }
-
-  const user = await prisma.user.create({
-    data: {
-      name: name.trim(),
-      email,
-      passwordHash: await bcrypt.hash(password, 10),
-      role: "customer",
-    },
-  });
 
   const token = await signSession({
     userId: user.id,

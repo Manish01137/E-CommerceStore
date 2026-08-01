@@ -14,10 +14,16 @@ const SORTS = [
   { value: "price-desc", label: "Price: High to Low" },
 ];
 
-export default function ProductsBrowser({ facets }: { facets: Facets }) {
+export default function ProductsBrowser({
+  facets,
+  initialProducts,
+}: {
+  facets: Facets;
+  initialProducts: ProductDTO[];
+}) {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState<ProductDTO[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<ProductDTO[]>(initialProducts);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [category, setCategory] = useState(searchParams.get("category") ?? "");
   const [scent, setScent] = useState(searchParams.get("scent") ?? "");
@@ -26,6 +32,9 @@ export default function ProductsBrowser({ facets }: { facets: Facets }) {
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [refreshKey, setRefreshKey] = useState(0);
   const abortRef = useRef<AbortController | null>(null);
+  // The server already fetched a list matching the initial category/scent/
+  // sort/(empty q) — skip re-fetching that exact same thing on mount.
+  const skipNextFetch = useRef(true);
 
   useEffect(() => {
     const t = setTimeout(() => setDebouncedQuery(query), 300);
@@ -33,11 +42,14 @@ export default function ProductsBrowser({ facets }: { facets: Facets }) {
   }, [query]);
 
   useEffect(() => {
+    if (skipNextFetch.current) {
+      skipNextFetch.current = false;
+      return;
+    }
+
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
-    // Entering the loading state alongside the fetch this effect owns.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     setError("");
 
