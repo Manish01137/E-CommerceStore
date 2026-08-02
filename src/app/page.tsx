@@ -100,14 +100,14 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mt-5 leading-relaxed text-earth">
-                Goat milk and raw honey. Activated charcoal and French green
-                clay. Rose, cherry blossom, neem, tulsi, coffee — ingredients you
+                Goat Milk and Raw Honey. Activated Charcoal and French Green
+                Clay. Rose, Cherry Blossom, Neem, Tulsi, Coffee — ingredients you
                 could name blindfolded, sourced from growers we know and pay
                 fairly.
               </p>
               <p className="mt-4 leading-relaxed text-earth">
-                No SLS, no parabens, no silicones, no synthetic fillers. Just
-                recipes perfected slowly, poured by hand, and cured with patience.
+                No SLS,No SLES, No Parabens, No Silicones, No synthetic fillers.
+                Just recipes perfected slowly.
               </p>
             </Reveal>
             <Reveal delay={0.24}>
