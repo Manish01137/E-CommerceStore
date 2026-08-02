@@ -100,10 +100,10 @@ export default async function HomePage() {
             </Reveal>
             <Reveal delay={0.16}>
               <p className="mt-5 leading-relaxed text-earth">
-                Goat Milk and Raw Honey. Activated Charcoal and French Green
-                Clay. Rose, Cherry Blossom, Neem, Tulsi, Coffee — ingredients you
-                could name blindfolded, sourced from growers we know and pay
-                fairly.
+                Goat Milk and Raw Honey. Activated Charcoal and Green French
+                 Clay. Rose, Cherry Blossom, Neem, Tulsi, Coffee — ingredients you
+                could name blindfolded.
+                
               </p>
               <p className="mt-4 leading-relaxed text-earth">
                 No SLS,No SLES, No Parabens, No Silicones, No synthetic fillers.

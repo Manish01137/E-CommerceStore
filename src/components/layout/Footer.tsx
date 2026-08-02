@@ -48,7 +48,8 @@ export default function Footer() {
           <p className="eyebrow mb-4 text-almond-light/70">Get in Touch</p>
           <ul className="space-y-2.5 text-sm text-almond-light/85">
             <li>hello@etherealartisan.in</li>
-            <li>+91 98765 43210</li>
+            <li>+91 98313 01409</li>
+            <li>+91 90073 38118</li>
             <li>203 Radhika Residency, Near Uma Amar Party Plot</li>
             <li>Gorwa Bridge Road, Vadodara, Gujarat 390024</li>
           </ul>
