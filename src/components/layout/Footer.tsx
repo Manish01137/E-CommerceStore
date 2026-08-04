@@ -53,6 +53,34 @@ export default function Footer() {
             <li>203 Radhika Residency, Near Uma Amar Party Plot</li>
             <li>Gorwa Bridge Road, Vadodara, Gujarat 390024</li>
           </ul>
+
+          <div className="mt-5 flex items-center gap-3">
+            <a
+              href="https://www.instagram.com/ethereal_artisansoap?utm_source=qr&igsh=cWpvaWNoaml2ZjNt"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ethereal Artisan on Instagram"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-almond-light/25 transition-colors hover:border-almond-light/50 hover:text-sand-light"
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <rect x="3.5" y="3.5" width="17" height="17" rx="5" stroke="currentColor" strokeWidth="1.6" />
+                <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.6" />
+                <circle cx="17.2" cy="6.8" r="1" fill="currentColor" />
+              </svg>
+            </a>
+            <a
+              href="https://www.facebook.com/share/188e6GK1Nf/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Ethereal Artisan on Facebook"
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-almond-light/25 transition-colors hover:border-almond-light/50 hover:text-sand-light"
+            >
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden>
+                <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M14 8.5 H12.8 C11.8 8.5 11 9.3 11 10.3 V12 H14 L13.6 14.3 H11 V19.5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 

@@ -13,6 +13,7 @@ import Reveal, { Stagger, StaggerItem } from "@/components/motion/Reveal";
 const TESTIMONIALS = [
   {
     name: "Samita Aich",
+    location: "Delhi",
     quote:
       "Well done... So proud of you and believe me the soaps are really amazing... Got feed back from friends whom I gifted and even myself used it",
     rating: 5,
@@ -21,6 +22,7 @@ const TESTIMONIALS = [
   },
   {
     name: "Suparna Bhaumick",
+    location: "Kolkata",
     quote:
       "Wonderful handmade soaps; body washes and now body lotions have also been recently launched. Kudos to my lovely childhood friend Shubhra Dutta and Meghna Dutta, the owners of this luxury brand Ethereal Artisan.",
     rating: 5,
@@ -28,7 +30,8 @@ const TESTIMONIALS = [
     tint: "#acb087",
   },
   {
-    name: "Aindrila Chakravarty",
+    name: "Aindrila Chakraborty",
+    location: "Noida",
     quote:
       "Have been using the body lotion now for a week and the results are showing up. The skin feels soft, looks healthy and the light fragrance just lingers on. The feeling of using a natural product, free from chemicals, makes the experience even more satisfying. Thank you Ethereal Artisan.",
     rating: 5,
@@ -37,6 +40,7 @@ const TESTIMONIALS = [
   },
   {
     name: "Abanti Chatterjee",
+    location: "Kolkata",
     quote:
       "Undoubtedly amazing products!! I am personally using it. Just go for it!",
     rating: 5,
@@ -45,6 +49,7 @@ const TESTIMONIALS = [
   },
   {
     name: "Bipasha Banerjee",
+    location: "Kolkata",
     quote:
       "Used these body scrub and face pack...they are so good!! Just after one wash you can feel that soft and smooth skin you have longed for!! I am so happy and satisfied with the products! It's a must use product! Thank you once again Ethereal Artisan!",
     rating: 5,
@@ -53,11 +58,22 @@ const TESTIMONIALS = [
   },
   {
     name: "Anita Shukla",
+    // TODO: "Holding" isn't a real place name — swap in the correct city once confirmed.
+    location: "",
     quote:
       "Thank you Shubhra. The soaps are skin friendly with amazing fragrance. As beautiful as they look, they give refreshing bathing experience.",
     rating: 5,
     initial: "A",
     tint: "#b7c19c",
+  },
+  {
+    name: "Rajrupa",
+    location: "Thane",
+    quote:
+      "Im using ethereal body washes n body cream for many years now. I have tried all the varieties (my favourites are orange , coffee, ocean mist n lavender).I have sensitive skin so all products do not suit my skin which are available in the market. But after I started using Ethereal body wash I have just fallen in love with it. It moistures my skin, lathering is good, fragrances are lovely. Last but not the least I am a huge fan of their body lotion and face cream. It is simply magical(vanilla n orange). Im really very happy with your genuine products. Will recommend to my friends for sure",
+    rating: 5,
+    initial: "R",
+    tint: "#c3b5cc",
   },
 ];
 
@@ -104,7 +120,7 @@ function TestimonialCard({
     <motion.figure
       ref={ref}
       aria-hidden={hideFromA11y || undefined}
-      className="relative flex h-full w-70 shrink-0 flex-col overflow-hidden rounded-2xl bg-almond-light p-7 shadow-card sm:w-85 lg:w-95"
+      className="relative flex w-70 shrink-0 flex-col overflow-hidden rounded-2xl bg-almond-light p-7 shadow-card sm:w-85 lg:w-95"
       initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       whileHover={{ scale: 1.025, boxShadow: "var(--shadow-card-hover)" }}
@@ -125,20 +141,23 @@ function TestimonialCard({
         &ldquo;
       </motion.span>
 
-      <div className="relative z-10">
+      <div className="relative z-10 flex h-full flex-col">
         <AnimatedStars count={t.rating} active={inView} baseDelay={enterDelay + 0.42} />
-        <blockquote className="mt-4 flex-1 text-[15px] leading-relaxed text-earth-deep">
+        <blockquote className="mt-4 text-[15px] leading-relaxed text-earth-deep">
           {t.quote}
         </blockquote>
-        <figcaption className="mt-6 flex items-center gap-3">
+        <figcaption className="mt-auto flex items-center gap-3 pt-6">
           <span
-            className="flex h-11 w-11 items-center justify-center rounded-full font-serif text-base font-semibold text-earth-deep"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-serif text-base font-semibold text-earth-deep"
             style={{ backgroundColor: t.tint }}
             aria-hidden
           >
             {t.initial}
           </span>
-          <p className="text-sm font-bold text-earth-deep">{t.name}</p>
+          <div>
+            <p className="text-sm font-bold text-earth-deep">{t.name}</p>
+            {t.location && <p className="text-xs text-earth-deep/70">{t.location}</p>}
+          </div>
         </figcaption>
       </div>
     </motion.figure>
@@ -237,13 +256,16 @@ function StaticTestimonialGrid() {
             </blockquote>
             <figcaption className="mt-6 flex items-center gap-3">
               <span
-                className="flex h-11 w-11 items-center justify-center rounded-full font-serif text-base font-semibold text-earth-deep"
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-serif text-base font-semibold text-earth-deep"
                 style={{ backgroundColor: t.tint }}
                 aria-hidden
               >
                 {t.initial}
               </span>
-              <p className="text-sm font-bold text-earth-deep">{t.name}</p>
+              <div>
+                <p className="text-sm font-bold text-earth-deep">{t.name}</p>
+                {t.location && <p className="text-xs text-earth-deep/70">{t.location}</p>}
+              </div>
             </figcaption>
           </figure>
         </StaggerItem>

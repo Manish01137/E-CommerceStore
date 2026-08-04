@@ -100,8 +100,8 @@ export default function AboutPage() {
           <Reveal delay={0.12}>
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-sand shadow-card">
               <Image
-                src="/banners/banner-story.jpg"
-                alt="A row of hand-cut soap bars resting on soft linen"
+                src="/products/flower-soap-pink-rose-2.jpg"
+                alt="Stacked Ethereal Artisan rose soap bars with a dried rose"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
@@ -196,8 +196,8 @@ export default function AboutPage() {
           <Reveal>
             <div className="relative aspect-[5/4] overflow-hidden rounded-3xl border border-sand shadow-card">
               <Image
-                src="/banners/banner-mission.jpg"
-                alt="Two bars of natural soap, one tied with garden twine"
+                src="/products/clay-soap-green-french.jpg"
+                alt="Stacked Ethereal Artisan French green clay soap bars"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 className="object-cover"
