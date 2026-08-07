@@ -22,7 +22,7 @@ const BELIEFS = [
   },
   {
     title: "Free from harsh chemicals",
-    body: "No SLS, no SLES, no parabens, no silicones. Honest labels, in words you can actually read.",
+    body: "No SLS, no SLES, No Parabens, No Silicones. Honest labels, in words you can actually read.",
     icon: "M5 4 L19 4 L19 20 L5 20 Z M8 9 H16 M8 13 H16 M8 17 H12",
   },
   {

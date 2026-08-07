@@ -9,6 +9,7 @@ import DemoBanner from "@/components/layout/DemoBanner";
 import { IS_DEMO } from "@/lib/demo";
 import CartDrawer from "@/components/cart/CartDrawer";
 import PageTransition from "@/components/layout/PageTransition";
+import ChatWidget from "@/components/chat/ChatWidget";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -44,6 +45,7 @@ export default function RootLayout({
             {IS_DEMO && <DemoBanner />}
             <Navbar />
             <CartDrawer />
+            <ChatWidget />
             <PageTransition>
               <main className="flex-1">{children}</main>
               <Footer />

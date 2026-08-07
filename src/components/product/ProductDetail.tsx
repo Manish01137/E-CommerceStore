@@ -234,10 +234,10 @@ export default function ProductDetail({ product }: { product: ProductDTO }) {
 
         <ul className="mt-8 grid gap-2.5 border-t border-sand pt-6 text-sm text-earth">
           <li className="flex items-center gap-2.5">
-            <Dot /> Free shipping on orders above ₹999
+            <Dot /> Free shipping on orders above ₹1499
           </li>
           <li className="flex items-center gap-2.5">
-            <Dot /> Made fresh in small batches — 12-month shelf life
+            <Dot /> Made fresh in small batches — 18-month shelf life
           </li>
           <li className="flex items-center gap-2.5">
             <Dot /> 100% plastic-conscious packaging
